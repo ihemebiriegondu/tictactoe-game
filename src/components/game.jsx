@@ -1,18 +1,19 @@
 import React, { useState } from 'react'
+import Image from 'next/image';
+import celebrationGif from '../images/icegif-85.gif'
 
-
-export default function Game() {
+export default function Game({ player1Name, player2Name, player1Symbol, player2Symbol }) {
 
   const [gameInProgress, setGameInProgress] = useState(true);
   const [winnerGotten, setWinnerGotten] = useState(false);
   const [winner, setWinner] = useState('');
 
   const players = [
-    { playerName: 'player1', playerSymbol: 'X' },
-    { playerName: 'player2', playerSymbol: 'O' }
+    { playerName: player1Name, playerSymbol: player1Symbol },
+    { playerName: player2Name, playerSymbol: player2Symbol }
   ]
-  const [currentPlayer, setCurrentPlayer] = useState('player1')
-  const [currentPlayerSymbol, setCurrentPlayerSymbol] = useState('X')
+  const [currentPlayer, setCurrentPlayer] = useState(player1Name)
+  const [currentPlayerSymbol, setCurrentPlayerSymbol] = useState(players[0].playerSymbol)
 
 
   const endTestFunction = () => {
@@ -97,20 +98,33 @@ export default function Game() {
 
   return (
     <>
-      <div>
+      <div className='px-8 relative mb-4'>
         {
           gameInProgress && (
-            <p className={`${winnerGotten ? 'hidden' : 'block'}`}>{currentPlayer}'s turn</p>
+            <p className={`${winnerGotten ? 'hidden' : 'block'} text-primary font-bold text-3xl capitalize text-center mb-6`}>{currentPlayer}'s turn</p>
           )
         }
-        <p className={`${gameInProgress ? 'hidden' : 'block'}`}>Game over</p>
+        <p className={`${gameInProgress ? 'hidden' : 'block'} text-primary font-bold text-3xl capitalize text-center mb-6`}>Game over</p>
         {
           winnerGotten && (
-            <p className=''>{winner} has won</p>
+            <p className='text-center text-primary text-3xl uppercase font-extrabold'>{winner} won!!!</p>
           )
         }
       </div>
-      <section className='grid grid-cols-3 w-1/2 p-4 mx-auto bg-blue-200 gap-4 h-fit'>
+
+      {
+        winnerGotten && (
+          <div className='absolute z-10 w-full h-full'>
+            <Image
+              className="object-scale-down absolute w-full h-full"
+              alt="fireworks"
+              src={celebrationGif}
+              fill
+            />
+          </div>
+        )
+      }
+      <section className='grid grid-cols-3 w-fit p-10 rounded-xl mx-auto bg-white gap-4 h-fit'>
         <div className='allBoxes horizontalTopBox diagonal1Box verticalLeftBox bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
@@ -141,19 +155,21 @@ export default function Game() {
       </section>
 
       <div>
-        <p className={`${gameInProgress ? 'hidden' : 'block'}`}
-          onClick={() => {
-            const allBoxes = document.querySelectorAll('.allBoxes');
-            allBoxes.forEach(box => {
-              box.textContent = ''
-            });
-            setCurrentPlayer(players[0].playerName)
-            setCurrentPlayerSymbol(players[0].playerSymbol)
-            setGameInProgress(true);
-            setWinnerGotten(false);
-            setWinner('');
-          }}
-        >Restart</p>
+        <div className="flex justify-center pt-6 relative z-20">
+          <p className={`${gameInProgress ? 'hidden' : 'block'} bg-primary text-white py-4 px-6 rounded-xl font-bold`}
+            onClick={() => {
+              const allBoxes = document.querySelectorAll('.allBoxes');
+              allBoxes.forEach(box => {
+                box.textContent = ''
+              });
+              setCurrentPlayer(players[0].playerName)
+              setCurrentPlayerSymbol(players[0].playerSymbol)
+              setGameInProgress(true);
+              setWinnerGotten(false);
+              setWinner('');
+            }}
+          >Restart</p>
+        </div>
       </div>
     </>
   )
