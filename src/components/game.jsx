@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 
 export default function Game() {
 
-  const [gameInProgress, setGameInProgress] = useState(true)
+  const [gameInProgress, setGameInProgress] = useState(true);
+  const [winnerGotten, setWinnerGotten] = useState(false);
+  const [winner, setWinner] = useState('');
 
-  const [players, setPlayers] = useState([
-    { playerName: 'player1', playerSymbol: 'x' },
-    { playerName: 'player2', playerSymbol: 'o' }
-  ])
+  const players = [
+    { playerName: 'player1', playerSymbol: 'X' },
+    { playerName: 'player2', playerSymbol: 'O' }
+  ]
   const [currentPlayer, setCurrentPlayer] = useState('player1')
-  const [currentPlayerSymbol, setCurrentPlayerSymbol] = useState('x')
+  const [currentPlayerSymbol, setCurrentPlayerSymbol] = useState('X')
 
 
   const endTestFunction = () => {
@@ -25,69 +27,115 @@ export default function Game() {
     }
   }
 
+  const isWinner = (directions) => {
+    let directionsTextContents = []
+    directions.forEach(direction => {
+      directionsTextContents.push(direction.textContent)
+    });
+
+    //console.log(directionsTextContents)
+    if (directionsTextContents.every((textContent) => textContent === 'X') || directionsTextContents.every((textContent) => textContent === 'O')) {
+      setWinnerGotten(true);
+      setWinner(currentPlayer);
+      setGameInProgress(false)
+    }
+  }
+
   const chooseWinner = () => {
-    const horzontalTopBoxes = document.querySelectorAll('.horzontalTopBox');
-    const horzontalMiddleBoxes = document.querySelectorAll('.horzontalMiddleBox');
-    const horzontalBottomBoxes = document.querySelectorAll('.horzontalBottomBox');
+    const allBoxes = document.querySelectorAll('.allBoxes');
+    let directionBoxesArray = [];
+    allBoxes.forEach(box => {
+      if (box.classList.contains('horizontalTopBox')) {
+        isWinner(document.querySelectorAll('.horizontalTopBox'));
+      }
 
-    const verticalLeftBoxes = document.querySelectorAll('.verticalLeftBox');
-    const verticalMiddleBoxes = document.querySelectorAll('.verticalMiddleBox');
-    const verticalRightBoxes = document.querySelectorAll('.verticalRightBox');
+      if (box.classList.contains('horizontalMiddleBox')) {
+        isWinner(document.querySelectorAll('.horizontalMiddleBox'));
+      }
 
-    const diagonal1Boxes = document.querySelectorAll('.diagona1Box');
-    const diagonal2Boxes = document.querySelectorAll('.diagonal2Box');
+      if (box.classList.contains('horizontalBottomBox')) {
+        isWinner(document.querySelectorAll('.horizontalBottomBox'));
+      }
+      if (box.classList.contains('verticalLeftBox')) {
+        isWinner(document.querySelectorAll('.verticalLeftBox'));
+      }
 
-    
+      if (box.classList.contains('verticalMiddleBox')) {
+        isWinner(document.querySelectorAll('.verticalMiddleBox'));
+      }
+
+      if (box.classList.contains('verticalRightBox')) {
+        isWinner(document.querySelectorAll('.verticalRightBox'));
+      }
+
+      if (box.classList.contains('diagonal1Box')) {
+        isWinner(document.querySelectorAll('.diagonal1Box'));
+      }
+      if (box.classList.contains('diagonal2Box')) {
+        isWinner(document.querySelectorAll('.diagonal2Box'));
+      }
+    });
   }
 
   const setPlayerFunction = (e) => {
     //console.log(e.target.textContent)
-    if (e.target.textContent === '') {
-      e.target.textContent = currentPlayerSymbol
-      players.forEach(player => {
-        if (player.playerName != currentPlayer) {
-          setCurrentPlayer(player.playerName)
-          setCurrentPlayerSymbol(player.playerSymbol)
-        }
-      });
-    }
+    if (gameInProgress === true) {
+      if (e.target.textContent === '') {
+        e.target.textContent = currentPlayerSymbol
+        players.forEach(player => {
+          if (player.playerName != currentPlayer) {
+            setCurrentPlayer(player.playerName)
+            setCurrentPlayerSymbol(player.playerSymbol)
+          }
+        });
+      }
 
-    endTestFunction()
-    chooseWinner()
+      endTestFunction()
+      chooseWinner()
+    }
   }
 
   return (
     <>
       <div>
-        <p className={`${gameInProgress ? 'block' : 'hidden'}`}>{currentPlayer}'s turn</p>
+        {
+          gameInProgress && (
+            <p className={`${winnerGotten ? 'hidden' : 'block'}`}>{currentPlayer}'s turn</p>
+          )
+        }
         <p className={`${gameInProgress ? 'hidden' : 'block'}`}>Game over</p>
+        {
+          winnerGotten && (
+            <p className=''>{winner} has won</p>
+          )
+        }
       </div>
       <section className='grid grid-cols-3 w-1/2 p-4 mx-auto bg-blue-200 gap-4 h-fit'>
-        <div className='allBoxes horzontalTopBox diagonal1Box verticalLeftBox bg-black p-4 rounded-xl text-9xl text-white flex flex-col justify-center items-center w-36 h-36'
+        <div className='allBoxes horizontalTopBox diagonal1Box verticalLeftBox bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horzontalTopBox verticalLeftBox bg-black p-4 rounded-xl text-9xl text-white flex flex-col justify-center items-center w-36 h-36'
+        <div className='allBoxes horizontalTopBox verticalMiddleBox bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horzontalTopBox verticalLeftBox diagonal2Box bg-black p-4 rounded-xl text-9xl text-white flex flex-col justify-center items-center w-36 h-36'
+        <div className='allBoxes horizontalTopBox verticalRightBox diagonal2Box bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horzontalMiddleBox verticalMiddleBox bg-black p-4 rounded-xl text-9xl text-white flex flex-col justify-center items-center w-36 h-36'
+        <div className='allBoxes horizontalMiddleBox verticalLeftBox bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horzontalMiddleBox diagonal1Box diagonal2Box verticalMiddleBox bg-black p-4 rounded-xl text-9xl text-white flex flex-col justify-center items-center w-36 h-36'
+        <div className='allBoxes horizontalMiddleBox diagonal1Box diagonal2Box verticalMiddleBox bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horzontalMiddleBox verticalMiddleBox bg-black p-4 rounded-xl text-9xl text-white flex flex-col justify-center items-center w-36 h-36'
+        <div className='allBoxes horizontalMiddleBox verticalRightBox bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horzontalBottomBox verticalRightBox diagonal2Box bg-black p-4 rounded-xl text-9xl text-white flex flex-col justify-center items-center w-36 h-36'
+        <div className='allBoxes horizontalBottomBox verticalLeftBox diagonal2Box bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horzontalBottomBox verticalRightBox bg-black p-4 rounded-xl text-9xl text-white flex flex-col justify-center items-center w-36 h-36'
+        <div className='allBoxes horizontalBottomBox verticalMiddleBox bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horzontalBottomBox diagonal1Box verticalRightBox bg-black p-4 rounded-xl text-9xl text-white flex flex-col justify-center items-center w-36 h-36'
+        <div className='allBoxes horizontalBottomBox diagonal1Box verticalRightBox bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
       </section>
@@ -101,7 +149,9 @@ export default function Game() {
             });
             setCurrentPlayer(players[0].playerName)
             setCurrentPlayerSymbol(players[0].playerSymbol)
-            setGameInProgress(true)
+            setGameInProgress(true);
+            setWinnerGotten(false);
+            setWinner('');
           }}
         >Restart</p>
       </div>
