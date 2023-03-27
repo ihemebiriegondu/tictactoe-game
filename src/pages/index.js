@@ -50,7 +50,7 @@ export default function Home() {
 
         {
           userEntered && (
-            <Game player1Name={player1} player2Name={player2} player1Symbol={player1Symbol} player2Symbol={player2Symbol} />
+            <Game player1Name={player1} player2Name={player2} player1Symbol={player1Symbol} player2Symbol={player2Symbol} isSinglePlayer={isSinglePlayer} />
           )
         }
 

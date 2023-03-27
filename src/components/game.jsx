@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import celebrationGif from '../images/icegif-85.gif'
 
-export default function Game({ player1Name, player2Name, player1Symbol, player2Symbol }) {
+export default function Game({ player1Name, player2Name, player1Symbol, player2Symbol, isSinglePlayer }) {
 
   const [gameInProgress, setGameInProgress] = useState(true);
   const [winnerGotten, setWinnerGotten] = useState(false);
   const [winner, setWinner] = useState('');
+  const [computerPlayed, setComputerPlayed] = useState(false);
 
   const players = [
     { playerName: player1Name, playerSymbol: player1Symbol },
@@ -14,6 +15,13 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
   ]
   const [currentPlayer, setCurrentPlayer] = useState(player1Name)
   const [currentPlayerSymbol, setCurrentPlayerSymbol] = useState(players[0].playerSymbol)
+
+  useEffect(() => {
+    if (isSinglePlayer) {
+      chooseWinner();
+      //console.log(computerPlayed)
+    }
+  })
 
 
   const endTestFunction = () => {
@@ -38,13 +46,20 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
     if (directionsTextContents.every((textContent) => textContent === 'X') || directionsTextContents.every((textContent) => textContent === 'O')) {
       setWinnerGotten(true);
       setWinner(currentPlayer);
-      setGameInProgress(false)
+      setGameInProgress(false);
+
+      if (computerPlayed === true) {
+        if (currentPlayer === player1Name) {
+          setCurrentPlayer(player2Name)
+        }
+      } else {
+        setCurrentPlayer(player1Name)
+      }
     }
   }
 
   const chooseWinner = () => {
     const allBoxes = document.querySelectorAll('.allBoxes');
-    let directionBoxesArray = [];
     allBoxes.forEach(box => {
       if (box.classList.contains('horizontalTopBox')) {
         isWinner(document.querySelectorAll('.horizontalTopBox'));
@@ -57,6 +72,7 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
       if (box.classList.contains('horizontalBottomBox')) {
         isWinner(document.querySelectorAll('.horizontalBottomBox'));
       }
+
       if (box.classList.contains('verticalLeftBox')) {
         isWinner(document.querySelectorAll('.verticalLeftBox'));
       }
@@ -72,27 +88,69 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
       if (box.classList.contains('diagonal1Box')) {
         isWinner(document.querySelectorAll('.diagonal1Box'));
       }
+
       if (box.classList.contains('diagonal2Box')) {
         isWinner(document.querySelectorAll('.diagonal2Box'));
       }
     });
   }
 
+  const computerPlayer = () => {
+    const allBoxes = document.querySelectorAll('.allBoxes');
+    const allBoxesTextContent = [];
+    const allEmptyBoxesIndex = [];
+
+    allBoxes.forEach(box => {
+      allBoxesTextContent.push(box.textContent);
+    });
+
+    for (let i = 0; i < allBoxesTextContent.length; i++) {
+      if (allBoxesTextContent[i] === '') {
+        //console.log(i)
+        allEmptyBoxesIndex.push(i)
+      }
+    }
+    //console.log(allEmptyBoxesIndex)
+    const randomBox = allEmptyBoxesIndex[Math.floor(Math.random() * allEmptyBoxesIndex.length)];
+    //console.log(randomBox)
+    players.forEach(player => {
+      setCurrentPlayer(player.playerName)
+      setCurrentPlayerSymbol(player.playerSymbol)
+    });
+
+    setTimeout(() => {
+      if (randomBox != undefined) {
+        allBoxes[randomBox].textContent = player2Symbol
+
+        setCurrentPlayer(players[0].playerName);
+        setCurrentPlayerSymbol(players[0].playerSymbol);
+        setComputerPlayed(true)
+      }
+    }, 1000);
+    setComputerPlayed(false);
+  }
+
   const setPlayerFunction = (e) => {
     //console.log(e.target.textContent)
     if (gameInProgress === true) {
       if (e.target.textContent === '') {
-        e.target.textContent = currentPlayerSymbol
-        players.forEach(player => {
-          if (player.playerName != currentPlayer) {
-            setCurrentPlayer(player.playerName)
-            setCurrentPlayerSymbol(player.playerSymbol)
-          }
-        });
+
+        if (isSinglePlayer) {
+          e.target.textContent = currentPlayerSymbol
+          computerPlayer();
+        } else {
+          e.target.textContent = currentPlayerSymbol
+          players.forEach(player => {
+            if (player.playerName != currentPlayer) {
+              setCurrentPlayer(player.playerName)
+              setCurrentPlayerSymbol(player.playerSymbol)
+            }
+          });
+          chooseWinner();
+        }
       }
 
-      endTestFunction()
-      chooseWinner()
+      endTestFunction();
     }
   }
 
