@@ -1,8 +1,14 @@
 import { useState } from "react"
 import Head from "next/head"
 import Game from "@/components/game"
+import GameType from "@/components/gameType";
+import SinglePlayerForm from "@/components/singlePlayerForm";
+import MultiPlayerForm from "@/components/multiPlayerForm";
 
 export default function Home() {
+
+  const [isSinglePlayer, setIsSinglePlayer] = useState(false);
+  const [isDoublePlayer, setIsDoublePlayer] = useState(false);
 
   const [userEntered, setUserEntered] = useState(false);
   const [player1, setPlayer1] = useState('');
@@ -10,16 +16,9 @@ export default function Home() {
   const [player2, setPlayer2] = useState('');
   const [player2Symbol, setPlayer2Symbol] = useState('');
 
-  const handleSubmit = (e) => {
+
+  const handleSinglePlayerForm = (e) => {
     e.preventDefault();
-    if (player1 != '' && player2 != '' && player1Symbol != '') {
-      if (player1Symbol === 'X') {
-        setPlayer2Symbol('O')
-      } else if (player1Symbol === 'O') {
-        setPlayer2Symbol('X')
-      }
-      setUserEntered(true);
-    }
   }
 
   return (
@@ -30,34 +29,25 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="bg-lightSecondary h-full w-full absolute top-0 bottom-0 flex flex-col justify-center">
-        <form className={`bg-secondary w-1/3 mx-auto px-6 py-8 rounded-3xl shadow-lg ${userEntered ? 'hidden' : 'block'}`} onSubmit={(e) => { handleSubmit(e) }}>
-          <h1 className="text-center text-xl font-bold text-primary mb-6">Enter Players info</h1>
-          <div className="flex flex-col mb-4">
-            <label htmlFor="player1Name" className="font-medium">Player 1 name</label>
-            <input className="mt-2 bg-transparent border-2 rounded-xl px-2 py-3 border-primary outline-none" type={'text'} id='player1Name' onChange={(e) => setPlayer1(e.target.value)} />
-          </div>
-          <div className="flex flex-col mb-4">
-            <p className="font-medium mb-2">Player 1 symbol</p>
-            <div className="flex justify-around items-center">
-              <div>
-                <input className="accent-primary caret-primary bg-transparent outline-none w-4 h-4 cursor-pointer" value='X' type={'radio'} name='symbol' id="symbol1" onClick={(e) => setPlayer1Symbol(e.target.value)} />
-                <label htmlFor="symbol1" className="text-xl ml-2 font-bold cursor-pointer">X</label>
-              </div>
-              <div>
-                <input className="accent-primary caret-primary bg-transparent outline-none w-4 h-4 cursor-pointer" value='O' type={'radio'} name='symbol' id="symbol2" onClick={(e) => setPlayer1Symbol(e.target.value)} />
-                <label htmlFor="symbol2" className="text-xl ml-2 font-bold cursor-pointer">O</label>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col mb-4">
-            <label htmlFor="player2Name" className="font-medium">Player 2 Name</label>
-            <input className="mt-2 bg-transparent border-2 rounded-xl px-2 py-3 border-primary outline-none" type={'text'} id='player2Name' onChange={(e) => setPlayer2(e.target.value)} />
-          </div>
-          <div className="flex justify-center pt-6">
-            <button className="mx-auto bg-primary text-white py-4 px-6 rounded-xl font-bold">Start game</button>
-          </div>
-        </form>
+      <header className="bg-lightSecondary py-8">
+        <h1 className="text-primary text-center text-5xl font-black">TIC TAK TOE GAME</h1>
+      </header>
+      <main className="bg-lightSecondary h-full w-full absolute top-24 bottom-0 pt-16">
+
+        <GameType isSinglePlayer={setIsSinglePlayer} isDoublePlayer={setIsDoublePlayer} />
+
+        {
+          isSinglePlayer && (
+            <SinglePlayerForm userEntered={setUserEntered} player1={setPlayer1} player2={setPlayer2} player1Symbol={setPlayer1Symbol} player2Symbol={setPlayer2Symbol} />
+          )
+        }
+
+        {
+          isDoublePlayer && (
+            <MultiPlayerForm userEntered={setUserEntered} player1={setPlayer1} player1Symbol={setPlayer1Symbol} player2={setPlayer2} player2Symbol={setPlayer2Symbol} />
+          )
+        }
+
         {
           userEntered && (
             <Game player1Name={player1} player2Name={player2} player1Symbol={player1Symbol} player2Symbol={player2Symbol} />
