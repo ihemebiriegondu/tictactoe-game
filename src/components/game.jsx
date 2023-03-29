@@ -4,8 +4,8 @@ import celebrationGif from '../images/icegif-85.gif'
 
 export default function Game({ player1Name, player2Name, player1Symbol, player2Symbol, isSinglePlayer }) {
 
-  const [gameInProgress, setGameInProgress] = useState(true);
   const [winnerGotten, setWinnerGotten] = useState(false);
+  const [gameInProgress, setGameInProgress] = useState(true);
   const [winner, setWinner] = useState('');
   const [computerPlayed, setComputerPlayed] = useState(false);
 
@@ -14,12 +14,15 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
     { playerName: player2Name, playerSymbol: player2Symbol }
   ]
   const [currentPlayer, setCurrentPlayer] = useState(player1Name)
-  const [currentPlayerSymbol, setCurrentPlayerSymbol] = useState(players[0].playerSymbol)
+  const [currentPlayerSymbol, setCurrentPlayerSymbol] = useState(players[0].playerSymbol);
 
   useEffect(() => {
     if (isSinglePlayer) {
       chooseWinner();
-      //console.log(computerPlayed)
+      setGameInProgress(!winnerGotten)
+      if (winnerGotten) {
+        setGameInProgress(false);
+      }
     }
   })
 
@@ -30,7 +33,7 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
     allBoxes.forEach(box => {
       textContents.push(box.textContent)
     });
-    //check if all the boxes are empty so as to end the game
+    //check if all the boxes are filled so as to end the game
     if (textContents.every((textContent) => textContent != '')) {
       setGameInProgress(false)
     }
@@ -47,6 +50,7 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
       setWinnerGotten(true);
       setWinner(currentPlayer);
       setGameInProgress(false);
+      //console.log(directionsTextContents)
 
       if (computerPlayed === true) {
         if (currentPlayer === player1Name) {
@@ -117,20 +121,22 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
       setCurrentPlayer(player.playerName)
       setCurrentPlayerSymbol(player.playerSymbol)
     });
+    if (gameInProgress === true) {
+      setTimeout(() => {
+        if (randomBox != undefined) {
+          allBoxes[randomBox].textContent = player2Symbol
 
-    setTimeout(() => {
-      if (randomBox != undefined) {
-        allBoxes[randomBox].textContent = player2Symbol
-
-        setCurrentPlayer(players[0].playerName);
-        setCurrentPlayerSymbol(players[0].playerSymbol);
-        setComputerPlayed(true)
-      }
-    }, 1000);
+          setCurrentPlayer(players[0].playerName);
+          setCurrentPlayerSymbol(players[0].playerSymbol);
+          setComputerPlayed(true)
+        }
+      }, 1000);
+    }
     setComputerPlayed(false);
   }
 
   const setPlayerFunction = (e) => {
+    chooseWinner();
     //console.log(e.target.textContent)
     if (gameInProgress === true) {
       if (e.target.textContent === '') {
@@ -149,7 +155,6 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
           chooseWinner();
         }
       }
-
       endTestFunction();
     }
   }
