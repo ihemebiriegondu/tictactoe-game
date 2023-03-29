@@ -24,10 +24,10 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className="bg-lightSecondary py-8">
-        <h1 className="text-primary text-center text-5xl font-black">TIC TAC TOE GAME</h1>
+      <header className="bg-lightSecondary xl:py-8 md:py-4 py-3">
+        <h1 className="text-primary text-center 2xl:text-5xl lg:text-3xl md:text-2xl text-xl font-black">TIC TAC TOE GAME</h1>
       </header>
-      <main className="bg-lightSecondary h-full w-full absolute top-24 bottom-0 pt-16">
+      <main className="bg-lightSecondary h-full w-full absolute xl:top-24 md:top-16 top-12 bottom-0 pt-16">
 
         <GameType isSinglePlayer={setIsSinglePlayer} isDoublePlayer={setIsDoublePlayer} />
 

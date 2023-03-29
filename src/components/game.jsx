@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import celebrationGif from '../images/icegif-85.gif'
+import thinkingGif from '../images/thinking.gif'
 
 export default function Game({ player1Name, player2Name, player1Symbol, player2Symbol, isSinglePlayer }) {
 
@@ -64,7 +65,7 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
         //adding the red color to the winning 3's
         direction.classList.add('text-red-500')
       });
-      
+
       if (computerPlayed === true) {
         //check if the winner symbol is the same as the computer symbol, so as to set the winner
         if (winnerSymbol === player2Symbol) {
@@ -181,20 +182,34 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
       <div className='px-8 relative mb-4'>
         {
           gameInProgress && (
-            <p className={`${winnerGotten ? 'hidden' : 'block'} text-primary font-bold text-3xl capitalize text-center mb-6`}>{currentPlayer}'s turn</p>
+            <div className='flex justify-center'>
+              <p className={`${winnerGotten ? 'hidden' : 'block'} mr-4 text-primary font-bold lg:text-3xl sm:text-2xl text-xl capitalize text-center md:mb-6 mb-3`}>{currentPlayer}'s turn</p>
+              {
+                isSinglePlayer && (
+                  <div className={`relative h-12 w-12 ${currentPlayer === player2Name ? 'block' : 'hidden'} `}>
+                    <Image
+                      className="object-scale-down absolute w-full h-full"
+                      alt="thinking"
+                      src={thinkingGif}
+                      fill
+                    />
+                  </div>
+                )
+              }
+            </div>
           )
         }
-        <p className={`${gameInProgress ? 'hidden' : 'block'} text-primary font-bold text-3xl capitalize text-center mb-6`}>Game over</p>
+        <p className={`${gameInProgress ? 'hidden' : 'block'} text-primary font-bold lg:text-3xl sm:text-2xl text-xl capitalize text-center mb-6`}>Game over</p>
         {
           winnerGotten && (
-            <p className='text-center text-primary text-3xl uppercase font-extrabold'>{winner} won!!!</p>
+            <p className='text-center text-primary lg:text-3xl sm:text-2xl text-xl uppercase font-extrabold'>{winner} won!!!</p>
           )
         }
       </div>
 
       {
         winnerGotten && (
-          <div className='absolute z-10 w-full h-full'>
+          <div className='absolute z-10 w-full h-72 top-20'>
             <Image
               className="object-scale-down absolute w-full h-full"
               alt="fireworks"
@@ -204,45 +219,45 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
           </div>
         )
       }
-      <section className='grid grid-cols-3 w-fit p-10 rounded-xl mx-auto bg-white gap-4 h-fit'>
-        <div className='allBoxes horizontalTopBox diagonal1Box verticalLeftBox bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
+      <section className='grid grid-cols-3 sm:w-fit w-11/12 sm:p-10 p-4 rounded-xl mx-auto bg-white sm:gap-4 gap-2 h-fit'>
+        <div className='allBoxes horizontalTopBox diagonal1Box verticalLeftBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalTopBox verticalMiddleBox bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
+        <div className='allBoxes horizontalTopBox verticalMiddleBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalTopBox verticalRightBox diagonal2Box bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
+        <div className='allBoxes horizontalTopBox verticalRightBox diagonal2Box bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalMiddleBox verticalLeftBox bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
+        <div className='allBoxes horizontalMiddleBox verticalLeftBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalMiddleBox diagonal1Box diagonal2Box verticalMiddleBox bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
+        <div className='allBoxes horizontalMiddleBox diagonal1Box diagonal2Box verticalMiddleBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalMiddleBox verticalRightBox bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
+        <div className='allBoxes horizontalMiddleBox verticalRightBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalBottomBox verticalLeftBox diagonal2Box bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
+        <div className='allBoxes horizontalBottomBox verticalLeftBox diagonal2Box bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalBottomBox verticalMiddleBox bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
+        <div className='allBoxes horizontalBottomBox verticalMiddleBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalBottomBox diagonal1Box verticalRightBox bg-black p-4 rounded-xl text-8xl text-white text-center w-36 h-36'
+        <div className='allBoxes horizontalBottomBox diagonal1Box verticalRightBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
       </section>
 
       <div>
         <div className="flex justify-center pt-6 relative z-20">
-          <p className={`${gameInProgress ? 'hidden' : 'block'} bg-primary text-white py-4 px-6 rounded-xl font-bold`}
+          <p className={`${gameInProgress ? 'hidden' : 'block'} bg-primary text-white md:py-4 py-2 px-6 rounded-xl font-bold`}
             onClick={() => {
               const allBoxes = document.querySelectorAll('.allBoxes');
               allBoxes.forEach(box => {
                 box.textContent = ''
 
-                if (box.classList.contains('text-red-500')){
+                if (box.classList.contains('text-red-500')) {
                   box.classList.remove('text-red-500')
                 }
               });
