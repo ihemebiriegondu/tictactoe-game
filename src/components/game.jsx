@@ -6,7 +6,7 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
 
   const [winnerGotten, setWinnerGotten] = useState(false);
   const [gameInProgress, setGameInProgress] = useState(true);
-  const [winner, setWinner] = useState('');
+  const [winner, setWinner] = useState(''); //winner name
   const [computerPlayed, setComputerPlayed] = useState(false);
 
   const players = [
@@ -19,11 +19,13 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
 
   useEffect(() => {
     if (isSinglePlayer) {
+      //call the chooseWinner function to check always if anyone has one
       chooseWinner();
 
+      //if there is a winner, gameInProgress is set to false
+      //all timeout's are cleared (to prevent the computerFunction from completing)
       if (winnerGotten) {
         setGameInProgress(false);
-        //console.log('gotten');
         var highestTimeoutId = setTimeout(";");
         for (var i = 0; i < highestTimeoutId; i++) {
           clearTimeout(i);
@@ -39,7 +41,7 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
     allBoxes.forEach(box => {
       textContents.push(box.textContent)
     });
-    //check if all the boxes are filled so as to end the game
+    //check if all the boxes have been filled so as to end the game
     if (textContents.every((textContent) => textContent != '')) {
       setGameInProgress(false)
     }
@@ -51,16 +53,20 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
       directionsTextContents.push(direction.textContent)
     });
 
-    //console.log(directionsTextContents)
     if (directionsTextContents.every((textContent) => textContent === 'X') || directionsTextContents.every((textContent) => textContent === 'O')) {
       setWinnerGotten(true);
-      //setWinner(currentPlayer);
       setGameInProgress(false);
-      //console.log(directionsTextContents)
       const winnerSymbol = directionsTextContents[0]
-      //console.log(winnerSymbol)
 
+      //console.log(directions)
+      directions.forEach(direction => {
+        //console.log(direction.classList)
+        //adding the red color to the winning 3's
+        direction.classList.add('text-red-500')
+      });
+      
       if (computerPlayed === true) {
+        //check if the winner symbol is the same as the computer symbol, so as to set the winner
         if (winnerSymbol === player2Symbol) {
           setCurrentPlayer(player2Name)
           setWinner(player2Name)
@@ -135,7 +141,6 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
     if (gameInProgress === true) {
       setTimeout(() => {
         if (randomBox != undefined) {
-          console.log('time out')
           allBoxes[randomBox].textContent = player2Symbol
 
           setCurrentPlayer(players[0].playerName);
@@ -236,6 +241,10 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
               const allBoxes = document.querySelectorAll('.allBoxes');
               allBoxes.forEach(box => {
                 box.textContent = ''
+
+                if (box.classList.contains('text-red-500')){
+                  box.classList.remove('text-red-500')
+                }
               });
               setCurrentPlayer(players[0].playerName)
               setCurrentPlayerSymbol(players[0].playerSymbol)
