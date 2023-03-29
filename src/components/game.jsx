@@ -16,12 +16,18 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
   const [currentPlayer, setCurrentPlayer] = useState(player1Name)
   const [currentPlayerSymbol, setCurrentPlayerSymbol] = useState(players[0].playerSymbol);
 
+
   useEffect(() => {
     if (isSinglePlayer) {
       chooseWinner();
-      setGameInProgress(!winnerGotten)
+
       if (winnerGotten) {
         setGameInProgress(false);
+        //console.log('gotten');
+        var highestTimeoutId = setTimeout(";");
+        for (var i = 0; i < highestTimeoutId; i++) {
+          clearTimeout(i);
+        }
       }
     }
   })
@@ -48,16 +54,21 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
     //console.log(directionsTextContents)
     if (directionsTextContents.every((textContent) => textContent === 'X') || directionsTextContents.every((textContent) => textContent === 'O')) {
       setWinnerGotten(true);
-      setWinner(currentPlayer);
+      //setWinner(currentPlayer);
       setGameInProgress(false);
       //console.log(directionsTextContents)
+      const winnerSymbol = directionsTextContents[0]
+      //console.log(winnerSymbol)
 
       if (computerPlayed === true) {
-        if (currentPlayer === player1Name) {
+        if (winnerSymbol === player2Symbol) {
           setCurrentPlayer(player2Name)
+          setWinner(player2Name)
+          //console.log(winner)
         }
       } else {
         setCurrentPlayer(player1Name)
+        setWinner(currentPlayer);
       }
     }
   }
@@ -124,6 +135,7 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
     if (gameInProgress === true) {
       setTimeout(() => {
         if (randomBox != undefined) {
+          console.log('time out')
           allBoxes[randomBox].textContent = player2Symbol
 
           setCurrentPlayer(players[0].playerName);
@@ -136,7 +148,6 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
   }
 
   const setPlayerFunction = (e) => {
-    chooseWinner();
     //console.log(e.target.textContent)
     if (gameInProgress === true) {
       if (e.target.textContent === '') {
@@ -154,6 +165,7 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
           });
           chooseWinner();
         }
+
       }
       endTestFunction();
     }
