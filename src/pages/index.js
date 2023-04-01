@@ -1,22 +1,7 @@
-import { useState } from "react"
 import Head from "next/head";
-
-import Game from "@/components/game"
-import GameType from "@/components/gameType";
-import SinglePlayerForm from "@/components/singlePlayerForm";
-import MultiPlayerForm from "@/components/multiPlayerForm";
 import Intro from "@/components/intro";
 
 export default function Home() {
-
-  const [isSinglePlayer, setIsSinglePlayer] = useState(false);
-  const [isDoublePlayer, setIsDoublePlayer] = useState(false);
-
-  const [userEntered, setUserEntered] = useState(false);
-  const [player1, setPlayer1] = useState('');
-  const [player1Symbol, setPlayer1Symbol] = useState('');
-  const [player2, setPlayer2] = useState('');
-  const [player2Symbol, setPlayer2Symbol] = useState('');
 
   return (
     <div className="bg-blackPurple absolute h-full w-full">
@@ -28,28 +13,6 @@ export default function Home() {
       </Head>
       <main className="">
         <Intro />
-
-        {/*
-        <GameType isSinglePlayer={setIsSinglePlayer} isDoublePlayer={setIsDoublePlayer} />
-        
-        {
-          isSinglePlayer && (
-            <SinglePlayerForm userEntered={setUserEntered} player1={setPlayer1} player2={setPlayer2} player1Symbol={setPlayer1Symbol} player2Symbol={setPlayer2Symbol} />
-          )
-        }
-
-        {
-          isDoublePlayer && (
-            <MultiPlayerForm userEntered={setUserEntered} player1={setPlayer1} player1Symbol={setPlayer1Symbol} player2={setPlayer2} player2Symbol={setPlayer2Symbol} />
-          )
-        }
-
-        {
-          userEntered && (
-            <Game player1Name={player1} player2Name={player2} player1Symbol={player1Symbol} player2Symbol={player2Symbol} isSinglePlayer={isSinglePlayer} />
-          )
-        }*/}
-
       </main>
     </div>
   )

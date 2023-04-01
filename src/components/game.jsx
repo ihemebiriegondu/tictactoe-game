@@ -3,12 +3,13 @@ import Image from 'next/image';
 import celebrationGif from '../images/icegif-85.gif'
 import thinkingGif from '../images/thinking.gif'
 
-export default function Game({ player1Name, player2Name, player1Symbol, player2Symbol, isSinglePlayer }) {
+export default function Game({ player1Name, player2Name, player1Symbol, player2Symbol, isSinglePlayer, singlePlayerTag }) {
 
   const [winnerGotten, setWinnerGotten] = useState(false);
   const [gameInProgress, setGameInProgress] = useState(true);
   const [winner, setWinner] = useState(''); //winner name
   const [computerPlayed, setComputerPlayed] = useState(false);
+  const [playerTag, setplayerTag] = useState(singlePlayerTag);
 
   const players = [
     { playerName: player1Name, playerSymbol: player1Symbol },
@@ -139,11 +140,14 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
       setCurrentPlayer(player.playerName)
       setCurrentPlayerSymbol(player.playerSymbol)
     });
+    setplayerTag("Computer's")
     if (gameInProgress === true) {
       setTimeout(() => {
         if (randomBox != undefined) {
+          
           allBoxes[randomBox].textContent = player2Symbol
 
+          setplayerTag(singlePlayerTag)
           setCurrentPlayer(players[0].playerName);
           setCurrentPlayerSymbol(players[0].playerSymbol);
           setComputerPlayed(true)
@@ -159,6 +163,10 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
       if (e.target.textContent === '') {
 
         if (isSinglePlayer) {
+          if (currentPlayer === 'You') {
+            setplayerTag(singlePlayerTag)
+          } 
+
           e.target.textContent = currentPlayerSymbol
           computerPlayer();
         } else {
@@ -183,7 +191,14 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
         {
           gameInProgress && (
             <div className='flex justify-center'>
-              <p className={`${winnerGotten ? 'hidden' : 'block'} mr-4 text-primary font-bold lg:text-3xl sm:text-2xl text-xl capitalize text-center md:mb-6 mb-3`}>{currentPlayer}'s turn</p>
+              {
+                isSinglePlayer && (
+                  <p className={`${winnerGotten ? 'hidden' : 'block'} mr-4 text-primary font-bold lg:text-3xl sm:text-2xl text-xl capitalize text-center md:mb-6 mb-3`}>
+                    {playerTag} turn
+                  </p>
+                )
+              }
+
               {
                 isSinglePlayer && (
                   <div className={`relative h-12 w-12 ${currentPlayer === player2Name ? 'block' : 'hidden'} `}>
@@ -196,6 +211,7 @@ export default function Game({ player1Name, player2Name, player1Symbol, player2S
                   </div>
                 )
               }
+
             </div>
           )
         }

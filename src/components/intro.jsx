@@ -1,6 +1,7 @@
 import React from 'react'
 import starImage from '../images/icons8-hand-drawn-star-60.png'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function Intro() {
     return (
@@ -17,7 +18,7 @@ export default function Intro() {
             </div>
 
             <div className='flex justify-center mt-20'>
-                <button className='bg-white py-4 w-8/12 mx-auto shadow shadow-lightSecondary rounded-3xl md:text-2xl text-base transition duration-300 hover:shadow-md hover:shadow-lightSecondary'>Let's play</button>
+                <Link href={'/selectGame'} className='bg-white block text-center py-4 w-8/12 mx-auto shadow shadow-lightSecondary rounded-3xl md:text-2xl text-base transition duration-300 hover:shadow-md hover:shadow-lightSecondary'>Let's play</Link>
             </div>
 
             <div>

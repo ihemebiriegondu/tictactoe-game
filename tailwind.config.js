@@ -12,6 +12,9 @@ module.exports = {
         'gold': '#FFD600',
         'blackPurple': '#0d1137' //purple
       },
+      animation: {
+        'slidedown': 'bounce 1s ease-in 1',
+      }
     },
   },
   plugins: [],
