@@ -3,7 +3,7 @@ import Image from 'next/image';
 import celebrationGif from '../images/icegif-85.gif'
 import thinkingGif from '../images/thinking.gif'
 
-export default function Game({ player1Name, player2Name, player1Symbol, player2Symbol, isSinglePlayer, isMultiplePlayer, singlePlayerTag }) {
+export default function MultiplayerGame({ player1Name, player2Name, player1Symbol, player2Symbol, isSinglePlayer, isMultiplePlayer, singlePlayerTag }) {
 
   const [winnerGotten, setWinnerGotten] = useState(false);
   const [gameInProgress, setGameInProgress] = useState(true);

@@ -13,7 +13,7 @@ export default function singlePlayer() {
             </Head>
             <div className='bg-blackPurple absolute h-full w-full'>
                 <div className=''>
-                    <Game isSinglePlayer={true} player1Name={'You'} singlePlayerTag={'Your'} player1Symbol={'X'} player2Name={'Computer'} player2Symbol={'O'} />
+                    <Game isSinglePlayer={true} isMultiplePlayer={false} player1Name={'You'} singlePlayerTag={'Your'} player1Symbol={'X'} player2Name={'Computer'} player2Symbol={'O'} />
                 </div>
             </div>
         </>
