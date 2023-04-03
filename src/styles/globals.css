@@ -10,6 +10,10 @@
     font-family: 'Roboto', sans-serif;
 }
 
+body {
+    background: #0d1137;
+}
+
 .playing-text {
     font-family: 'Sedgwick Ave', cursive;
 }

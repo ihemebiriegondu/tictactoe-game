@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image';
 import celebrationGif from '../images/icegif-85.gif'
-import thinkingGif from '../images/thinking.gif'
 
-export default function MultiplayerGame({ player1Name, player2Name, player1Symbol, player2Symbol, isSinglePlayer, isMultiplePlayer, singlePlayerTag }) {
+export default function MultiplayerGame({ player1Name, player2Name, player1Symbol, player2Symbol }) {
 
   const [winnerGotten, setWinnerGotten] = useState(false);
   const [gameInProgress, setGameInProgress] = useState(true);
   const [winner, setWinner] = useState(''); //winner name
-  const [computerPlayed, setComputerPlayed] = useState(false);
-  const [playerTag, setplayerTag] = useState(singlePlayerTag);
+  const [player1Score, setPlayer1Score] = useState(0);
+  const [player2Score, setPlayer2Score] = useState(0);
 
   const players = [
     { playerName: player1Name, playerSymbol: player1Symbol },
@@ -18,26 +17,7 @@ export default function MultiplayerGame({ player1Name, player2Name, player1Symbo
   const [currentPlayer, setCurrentPlayer] = useState(player1Name)
   const [currentPlayerSymbol, setCurrentPlayerSymbol] = useState(players[0].playerSymbol);
 
-
-  useEffect(() => {
-    if (isSinglePlayer) {
-      //call the chooseWinner function to check always if anyone has one
-      chooseWinner();
-
-      //if there is a winner, gameInProgress is set to false
-      //all timeout's are cleared (to prevent the computerFunction from completing)
-      if (winnerGotten) {
-        setGameInProgress(false);
-        var highestTimeoutId = setTimeout(";");
-        for (var i = 0; i < highestTimeoutId; i++) {
-          clearTimeout(i);
-        }
-      }
-    }
-  })
-
-
-  const endTestFunction = () => {
+  const endGameFunction = () => {
     const allBoxes = document.querySelectorAll('.allBoxes');
     let textContents = []
     allBoxes.forEach(box => {
@@ -57,27 +37,19 @@ export default function MultiplayerGame({ player1Name, player2Name, player1Symbo
 
     if (directionsTextContents.every((textContent) => textContent === 'X') || directionsTextContents.every((textContent) => textContent === 'O')) {
       setWinnerGotten(true);
+      setWinner(currentPlayer)
       setGameInProgress(false);
-      const winnerSymbol = directionsTextContents[0]
 
-      //console.log(directions)
       directions.forEach(direction => {
-        //console.log(direction.classList)
-        //adding the red color to the winning 3's
-        direction.classList.add('text-red-500')
+        direction.classList.add('bg-gold')
       });
-
-      if (computerPlayed === true) {
-        //check if the winner symbol is the same as the computer symbol, so as to set the winner
-        if (winnerSymbol === player2Symbol) {
-          setCurrentPlayer(player2Name)
-          setWinner(player2Name)
-          //console.log(winner)
-        }
-      } else {
-        setCurrentPlayer(player1Name)
-        setWinner(currentPlayer);
+      
+      if (currentPlayer === player1Name) {
+        setPlayer1Score(player1Score + 1)
+      } else if (currentPlayer === player2Name) {
+        setPlayer2Score(player2Score + 1)
       }
+
     }
   }
 
@@ -118,111 +90,72 @@ export default function MultiplayerGame({ player1Name, player2Name, player1Symbo
     });
   }
 
-  const computerPlayer = () => {
-    const allBoxes = document.querySelectorAll('.allBoxes');
-    const allBoxesTextContent = [];
-    const allEmptyBoxesIndex = [];
-
-    allBoxes.forEach(box => {
-      allBoxesTextContent.push(box.textContent);
-    });
-
-    for (let i = 0; i < allBoxesTextContent.length; i++) {
-      if (allBoxesTextContent[i] === '') {
-        //console.log(i)
-        allEmptyBoxesIndex.push(i)
-      }
-    }
-    //console.log(allEmptyBoxesIndex)
-    const randomBox = allEmptyBoxesIndex[Math.floor(Math.random() * allEmptyBoxesIndex.length)];
-    //console.log(randomBox)
-    players.forEach(player => {
-      setCurrentPlayer(player.playerName)
-      setCurrentPlayerSymbol(player.playerSymbol)
-    });
-    setplayerTag("Computer's")
-    if (gameInProgress === true) {
-      setTimeout(() => {
-        if (randomBox != undefined) {
-
-          allBoxes[randomBox].textContent = player2Symbol
-
-          setplayerTag(singlePlayerTag)
-          setCurrentPlayer(players[0].playerName);
-          setCurrentPlayerSymbol(players[0].playerSymbol);
-          setComputerPlayed(true)
-        }
-      }, 1000);
-    }
-    setComputerPlayed(false);
-  }
-
   const setPlayerFunction = (e) => {
     //console.log(e.target.textContent)
     if (gameInProgress === true) {
       if (e.target.textContent === '') {
 
-        if (isSinglePlayer) {
-          if (currentPlayer === 'You') {
-            setplayerTag(singlePlayerTag)
-          }
-
-          e.target.textContent = currentPlayerSymbol
-          computerPlayer();
-        } else {
-          e.target.textContent = currentPlayerSymbol
-          players.forEach(player => {
-            if (player.playerName != currentPlayer) {
-              setCurrentPlayer(player.playerName)
-              setCurrentPlayerSymbol(player.playerSymbol)
-            }
-          });
-          chooseWinner();
+        e.target.textContent = currentPlayerSymbol
+        if (currentPlayer === player1Name) {
+          e.target.classList.add('text-primary')
+        } else if (currentPlayer === player2Name) {
+          e.target.classList.add('text-secondary')
         }
 
+        players.forEach(player => {
+          if (player.playerName != currentPlayer) {
+            setCurrentPlayer(player.playerName)
+            setCurrentPlayerSymbol(player.playerSymbol)
+          }
+        });
+        chooseWinner();
+
       }
-      endTestFunction();
+      endGameFunction();
     }
   }
 
   return (
     <>
-      <div className='px-8 relative mb-4'>
-        {
-          gameInProgress && (
-            <div className='flex justify-center'>
-              {
-                isSinglePlayer && (
-                  <p className={`${winnerGotten ? 'hidden' : 'block'} mr-4 text-primary font-bold lg:text-3xl sm:text-2xl text-xl capitalize text-center md:mb-6 mb-3`}>
-                    {playerTag} turn
-                  </p>
-                )
-              }
+      <div className='flex items-center justify-around h-full mb-20'>
 
-              {
-                isMultiplePlayer && (
-                  <p className={`${winnerGotten ? 'hidden' : 'block'} mr-4 text-primary font-bold lg:text-3xl sm:text-2xl text-xl capitalize text-center md:mb-6 mb-3`}>
-                    {currentPlayer}'s turn
-                  </p>
-                )
-              }
-
-              {
-                isSinglePlayer && (
-                  <div className={`relative h-12 w-12 ${currentPlayer === player2Name ? 'block' : 'hidden'} `}>
-                    <Image
-                      className="object-scale-down absolute w-full h-full"
-                      alt="thinking"
-                      src={thinkingGif}
-                      fill
-                    />
-                  </div>
-                )
-              }
-
+        <div className='flex flex-col items-center'>
+          {
+            gameInProgress && (
+              <p className={`text-gold md:text-base text-sm mb-2 ${currentPlayer === player1Name ? 'visible' : 'invisible'}`}>Your turn</p>
+            )
+          }
+          <div className='bg-lightSecondary rounded-2xl p-2 pt-4 ring-inset ring ring-gold'>
+            <p className='md:text-base text-sm font-bold mb-3 text-center'>{player1Name}</p>
+            <div className='bg-blackPurple rounded-2xl flex justify-center p-4'>
+              <p className='playing-text text-primary font-bold text-6xl text-center [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)]'>{player1Symbol}</p>
             </div>
-          )
-        }
+          </div>
+        </div>
+
+        <div className='flex items-start justify-between lg:text-2xl md:text-xl text-lg text-white'>
+          <p className='mr-4'>{player1Score}</p>
+          <p className='mr-4'>:</p>
+          <p>{player2Score}</p>
+        </div>
+
+        <div className='flex flex-col items-center'>
+          {
+            gameInProgress && (
+              <p className={`text-gold md:text-base text-sm mb-2 ${currentPlayer === player2Name ? 'visible' : 'invisible'}`}>Your turn</p>
+            )
+          }
+          <div className='bg-lightSecondary rounded-2xl p-2 pt-4 ring-inset ring ring-gold'>
+            <p className='md:text-base text-sm font-bold mb-3 text-center'>{player2Name}</p>
+            <div className='bg-blackPurple rounded-2xl flex justify-center p-4'>
+              <p className='playing-text text-secondary font-bold text-6xl text-center [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)]'>{player2Symbol}</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div className='px-8 relative mb-4'>
         <p className={`${gameInProgress ? 'hidden' : 'block'} text-primary font-bold lg:text-3xl sm:text-2xl text-xl capitalize text-center mb-6`}>Game over</p>
         {
           winnerGotten && (
@@ -243,32 +176,32 @@ export default function MultiplayerGame({ player1Name, player2Name, player1Symbo
           </div>
         )
       }
-      <section className='grid grid-cols-3 sm:w-fit w-11/12 sm:p-10 p-4 rounded-xl mx-auto bg-white sm:gap-4 gap-2 h-fit'>
-        <div className='allBoxes horizontalTopBox diagonal1Box verticalLeftBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+      <section className='grid grid-cols-3 sm:w-fit w-11/12 sm:p-10 p-4 rounded-xl mx-auto bg-lightSecondary sm:gap-4 gap-2 h-fit'>
+        <div className={`allBoxes playing-text horizontalTopBox diagonal1Box verticalLeftBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalTopBox verticalMiddleBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+        <div className={`allBoxes playing-text horizontalTopBox verticalMiddleBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalTopBox verticalRightBox diagonal2Box bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+        <div className={`allBoxes playing-text horizontalTopBox verticalRightBox diagonal2Box bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalMiddleBox verticalLeftBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+        <div className={`allBoxes playing-text horizontalMiddleBox verticalLeftBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalMiddleBox diagonal1Box diagonal2Box verticalMiddleBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+        <div className={`allBoxes playing-text horizontalMiddleBox diagonal1Box diagonal2Box verticalMiddleBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalMiddleBox verticalRightBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+        <div className={`allBoxes playing-text horizontalMiddleBox verticalRightBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalBottomBox verticalLeftBox diagonal2Box bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+        <div className={`allBoxes playing-text horizontalBottomBox verticalLeftBox diagonal2Box bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalBottomBox verticalMiddleBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+        <div className={`allBoxes playing-text horizontalBottomBox verticalMiddleBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
-        <div className='allBoxes horizontalBottomBox diagonal1Box verticalRightBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+        <div className={`allBoxes playing-text horizontalBottomBox diagonal1Box verticalRightBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
           onClick={(e) => { setPlayerFunction(e) }}
         ></div>
       </section>
@@ -281,12 +214,15 @@ export default function MultiplayerGame({ player1Name, player2Name, player1Symbo
               allBoxes.forEach(box => {
                 box.textContent = ''
 
-                if (box.classList.contains('text-red-500')) {
-                  box.classList.remove('text-red-500')
+                if (box.classList.contains('bg-gold') || box.classList.contains('text-primary') || box.classList.contains('text-secondary')) {
+                  box.classList.remove('bg-gold')
+                  box.classList.remove('text-primary');
+                  box.classList.remove('text-secondary')
                 }
               });
-              setCurrentPlayer(players[0].playerName)
-              setCurrentPlayerSymbol(players[0].playerSymbol)
+
+              setCurrentPlayer(currentPlayer)
+              setCurrentPlayerSymbol(currentPlayerSymbol)
               setGameInProgress(true);
               setWinnerGotten(false);
               setWinner('');

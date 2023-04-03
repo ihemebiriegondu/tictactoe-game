@@ -18,7 +18,7 @@ export default function multiplayer() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className='bg-blackPurple absolute h-full w-full'>
-        <div className={`pt-40`}>
+        <div className={`${isUserInfoEntered ? 'pt-8' : 'pt-40'}`}>
           <PlayersSelect isUserInfoEntered={setIsUserInfoEntered} player1Symbol={setPlayer1Symbol} player2Symbol={setPlayer2Symbol} />
         </div>
 

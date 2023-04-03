@@ -31,7 +31,7 @@ export default function PlayersSelect(props) {
                 <div className='bg-lightSecondary rounded-2xl p-2 pt-4 ring-inset ring ring-gold'>
                     <p className='md:text-base text-sm font-bold mb-3 text-center'>Player 2</p>
                     <div className='bg-blackPurple rounded-2xl flex justify-center p-4'>
-                        <p className='playing-text text-primary font-bold text-6xl text-center [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)]'>{player2}</p>
+                        <p className='playing-text text-secondary font-bold text-6xl text-center [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)]'>{player2}</p>
                     </div>
                 </div>
             </div>
