@@ -1,8 +1,16 @@
-import Game from '@/components/game'
-import React from 'react'
+import React, { useState } from 'react'
 import Head from 'next/head'
+import SinglePlayerGame from '@/components/singlePlayerGame'
+import PlayersSelect from '@/components/playersSelect';
 
 export default function singlePlayer() {
+
+    const [isUserInfoEntered, setIsUserInfoEntered] = useState(false);
+    const [player1Symbol, setPlayer1Symbol] = useState('')
+    const [player2Symbol, setPlayer2Symbol] = useState('')
+    const [isSinglePlayer, setIsSinglePlayer] = useState('')
+    const [singlePlayerTag, setSinglePlayerTag] = useState('')
+
     return (
         <>
             <Head>
@@ -12,9 +20,17 @@ export default function singlePlayer() {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div className='bg-blackPurple absolute h-full w-full'>
-                <div className=''>
-                    <Game isSinglePlayer={true} isMultiplePlayer={false} player1Name={'You'} singlePlayerTag={'Your'} player1Symbol={'X'} player2Name={'Computer'} player2Symbol={'O'} />
+                <div className={`${isUserInfoEntered ? 'pt-8' : 'pt-40'}`}>
+                    <PlayersSelect isUserInfoEntered={setIsUserInfoEntered} player1Symbol={setPlayer1Symbol} player2Symbol={setPlayer2Symbol} isSinglePlayer={true} />
                 </div>
+
+                {
+                    isUserInfoEntered && (
+                        <div className='pb-12'>
+                            <SinglePlayerGame player1Name={'You'} player1Symbol={player1Symbol} player2Name={'Computer'} player2Symbol={player2Symbol} />
+                        </div>
+                    )
+                }
             </div>
         </>
     )

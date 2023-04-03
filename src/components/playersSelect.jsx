@@ -22,14 +22,16 @@ export default function PlayersSelect(props) {
         <div className={`h-full ${userEntered ? 'hidden' : 'block'}`}>
             <div className='flex items-center justify-around h-full'>
                 <div className='bg-lightSecondary rounded-2xl p-2 pt-4 ring-inset ring ring-gold'>
-                    <p className='md:text-base text-sm font-bold mb-3 text-center'>Player 1</p>
+                    <p className={`md:text-base text-sm font-bold mb-3 text-center ${props.isSinglePlayer ? 'hidden' : 'block'}`}>Player 1</p>
+                    <p className={`md:text-base text-sm font-bold mb-3 text-center ${props.isSinglePlayer ? 'block' : 'hidden'}`}>You</p>
                     <div className='bg-blackPurple rounded-2xl flex justify-center p-4'>
                         <p className='playing-text text-primary font-bold text-6xl text-center [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)]'>{player1}</p>
                     </div>
                 </div>
                 <p className='font-bold text-gold text-5xl [text-shadow:_0_6px_0_rgb(0_0_0_/_40%)]'>VS</p>
                 <div className='bg-lightSecondary rounded-2xl p-2 pt-4 ring-inset ring ring-gold'>
-                    <p className='md:text-base text-sm font-bold mb-3 text-center'>Player 2</p>
+                    <p className={`md:text-base text-sm font-bold mb-3 text-center ${props.isSinglePlayer ? 'hidden' : 'block'}`}>Player 2</p>
+                    <p className={`md:text-base text-sm font-bold mb-3 text-center ${props.isSinglePlayer ? 'block' : 'hidden'}`}>Computer</p>
                     <div className='bg-blackPurple rounded-2xl flex justify-center p-4'>
                         <p className='playing-text text-secondary font-bold text-6xl text-center [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)]'>{player2}</p>
                     </div>
