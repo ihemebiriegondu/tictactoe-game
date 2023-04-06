@@ -21,9 +21,31 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
     const [currentPlayerSymbol, setCurrentPlayerSymbol] = useState(players[0].playerSymbol);
 
 
+    useEffect(() => {
+        //if there is a winner, gameInProgress is set to false
+        //all timeout's are cleared (to prevent the computerFunction from completing)
+        if (winnerGotten) {
+            setGameInProgress(false);
+            var highestTimeoutId = setTimeout(";");
+            for (var i = 0; i < highestTimeoutId; i++) {
+                clearTimeout(i);
+            }
+        }
+    }, [winnerGotten])
 
+    const endGameFunction = () => {
+        const allBoxes = document.querySelectorAll('.allBoxes');
+        let textContents = []
+        allBoxes.forEach(box => {
+            textContents.push(box.textContent)
+        });
+        //check if all the boxes have been filled so as to end the game
+        if (textContents.every((textContent) => textContent != '')) {
+            setGameInProgress(false)
+        }
+    }
 
-    const isWinner = useCallback((directions) => {
+    const isWinner = (directions) => {
         let directionsTextContents = []
         directions.forEach(direction => {
             directionsTextContents.push(direction.textContent)
@@ -45,23 +67,19 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
                 if (winnerSymbol === player2Symbol) {
                     setCurrentPlayer(player2Name)
                     setWinner(player2Name)
-                    console.log(player1Score)
-                    console.log(player2Score)
                     setFirstPlayer(player1Name)
                     setPlayer2Score(player2Score + 1)
                 }
             } else {
                 setCurrentPlayer(player1Name)
                 setWinner(currentPlayer);
-                console.log(player1Score)
-                console.log(player2Score)
                 setFirstPlayer(player2Name);
                 setPlayer1Score(player1Score + 1)
             }
         }
-    }, [computerPlayed, player1Name, player1Score, player2Name, player2Score, player2Symbol, currentPlayer ]);
+    }
 
-    const chooseWinner = useCallback(() => {
+    const chooseWinner = () => {
         const allBoxes = document.querySelectorAll('.allBoxes');
         allBoxes.forEach(box => {
             if (box.classList.contains('horizontalTopBox')) {
@@ -96,35 +114,8 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
                 isWinner(document.querySelectorAll('.diagonal2Box'));
             }
         });
-    }, [isWinner])
-
-
-    useEffect(() => {
-        //call the chooseWinner function to check always if anyone has one
-        chooseWinner();
-
-        //if there is a winner, gameInProgress is set to false
-        //all timeout's are cleared (to prevent the computerFunction from completing)
-        if (winnerGotten) {
-            setGameInProgress(false);
-            var highestTimeoutId = setTimeout(";");
-            for (var i = 0; i < highestTimeoutId; i++) {
-                clearTimeout(i);
-            }
-        }
-    }, [firstPlayer, chooseWinner, winnerGotten])
-
-    const endGameFunction = () => {
-        const allBoxes = document.querySelectorAll('.allBoxes');
-        let textContents = []
-        allBoxes.forEach(box => {
-            textContents.push(box.textContent)
-        });
-        //check if all the boxes have been filled so as to end the game
-        if (textContents.every((textContent) => textContent != '')) {
-            setGameInProgress(false)
-        }
     }
+
 
     const computerPlayer = () => {
         const allBoxes = document.querySelectorAll('.allBoxes');
@@ -157,13 +148,15 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
 
                     setCurrentPlayer(players[0].playerName);
                     setCurrentPlayerSymbol(players[0].playerSymbol);
-                    setFirstPlayer(player2Name);
+                    setFirstPlayer(player1Name);
                     endGameFunction();
                     setComputerPlayed(true)
                 }
+                chooseWinner();
             }, 1000);
         }
         setComputerPlayed(false);
+        chooseWinner();
     }
 
     const setPlayerFunction = (e) => {
@@ -175,10 +168,11 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
                     e.target.classList.add('text-primary')
                 }
 
-                setFirstPlayer(player1Name);
+                setFirstPlayer(player2Name);
                 computerPlayer();
             }
             endGameFunction();
+            chooseWinner();
         }
     }
 
