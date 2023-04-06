@@ -34,7 +34,7 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
                 clearTimeout(i);
             }
         }
-    }, [firstPlayer])
+    }, [firstPlayer, chooseWinner, winnerGotten])
 
 
     const endGameFunction = () => {
@@ -122,7 +122,7 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
                 isWinner(document.querySelectorAll('.diagonal2Box'));
             }
         });
-    }, [])
+    }, [isWinner])
 
     const computerPlayer = () => {
         const allBoxes = document.querySelectorAll('.allBoxes');
