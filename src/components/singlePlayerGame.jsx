@@ -20,96 +20,6 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
     const [currentPlayer, setCurrentPlayer] = useState(player1Name)
     const [currentPlayerSymbol, setCurrentPlayerSymbol] = useState(players[0].playerSymbol);
 
-    const isWinner = useCallback((directions) => {
-        let directionsTextContents = []
-        directions.forEach(direction => {
-            directionsTextContents.push(direction.textContent)
-        });
-
-        if (directionsTextContents.every((textContent) => textContent === 'X') || directionsTextContents.every((textContent) => textContent === 'O')) {
-            setWinnerGotten(true);
-            setGameInProgress(false);
-            const winnerSymbol = directionsTextContents[0]
-
-            //console.log(directions)
-            directions.forEach(direction => {
-                //adding gold background to the winning rows/cols/diagonals
-                direction.classList.add('bg-gold')
-            });
-
-            if (computerPlayed === true) {
-                //check if the winner symbol is the same as the computer symbol, so as to set the winner
-                if (winnerSymbol === player2Symbol) {
-                    setCurrentPlayer(player2Name)
-                    setWinner(player2Name)
-                    console.log(player1Score)
-                    console.log(player2Score)
-                    setFirstPlayer(player1Name)
-                    setPlayer2Score(player2Score + 1)
-                }
-            } else {
-                setCurrentPlayer(player1Name)
-                setWinner(currentPlayer);
-                console.log(player1Score)
-                console.log(player2Score)
-                setFirstPlayer(player2Name);
-                setPlayer1Score(player1Score + 1)
-            }
-        }
-    }, []);
-
-    const chooseWinner = useCallback(() => {
-        const allBoxes = document.querySelectorAll('.allBoxes');
-        allBoxes.forEach(box => {
-            if (box.classList.contains('horizontalTopBox')) {
-                isWinner(document.querySelectorAll('.horizontalTopBox'));
-            }
-
-            if (box.classList.contains('horizontalMiddleBox')) {
-                isWinner(document.querySelectorAll('.horizontalMiddleBox'));
-            }
-
-            if (box.classList.contains('horizontalBottomBox')) {
-                isWinner(document.querySelectorAll('.horizontalBottomBox'));
-            }
-
-            if (box.classList.contains('verticalLeftBox')) {
-                isWinner(document.querySelectorAll('.verticalLeftBox'));
-            }
-
-            if (box.classList.contains('verticalMiddleBox')) {
-                isWinner(document.querySelectorAll('.verticalMiddleBox'));
-            }
-
-            if (box.classList.contains('verticalRightBox')) {
-                isWinner(document.querySelectorAll('.verticalRightBox'));
-            }
-
-            if (box.classList.contains('diagonal1Box')) {
-                isWinner(document.querySelectorAll('.diagonal1Box'));
-            }
-
-            if (box.classList.contains('diagonal2Box')) {
-                isWinner(document.querySelectorAll('.diagonal2Box'));
-            }
-        });
-    }, [isWinner])
-
-
-    useEffect(() => {
-        //call the chooseWinner function to check always if anyone has one
-        chooseWinner();
-
-        //if there is a winner, gameInProgress is set to false
-        //all timeout's are cleared (to prevent the computerFunction from completing)
-        if (winnerGotten) {
-            setGameInProgress(false);
-            var highestTimeoutId = setTimeout(";");
-            for (var i = 0; i < highestTimeoutId; i++) {
-                clearTimeout(i);
-            }
-        }
-    }, [firstPlayer, chooseWinner, winnerGotten])
 
 
     const endGameFunction = () => {
@@ -163,6 +73,97 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
         }
         setComputerPlayed(false);
     }
+
+    const isWinner = useCallback((directions) => {
+        let directionsTextContents = []
+        directions.forEach(direction => {
+            directionsTextContents.push(direction.textContent)
+        });
+
+        if (directionsTextContents.every((textContent) => textContent === 'X') || directionsTextContents.every((textContent) => textContent === 'O')) {
+            setWinnerGotten(true);
+            setGameInProgress(false);
+            const winnerSymbol = directionsTextContents[0]
+
+            //console.log(directions)
+            directions.forEach(direction => {
+                //adding gold background to the winning rows/cols/diagonals
+                direction.classList.add('bg-gold')
+            });
+
+            if (computerPlayed === true) {
+                //check if the winner symbol is the same as the computer symbol, so as to set the winner
+                if (winnerSymbol === player2Symbol) {
+                    setCurrentPlayer(player2Name)
+                    setWinner(player2Name)
+                    console.log(player1Score)
+                    console.log(player2Score)
+                    setFirstPlayer(player1Name)
+                    setPlayer2Score(player2Score + 1)
+                }
+            } else {
+                setCurrentPlayer(player1Name)
+                setWinner(currentPlayer);
+                console.log(player1Score)
+                console.log(player2Score)
+                setFirstPlayer(player2Name);
+                setPlayer1Score(player1Score + 1)
+            }
+        }
+    }, [computerPlayed, computerPlayer, player1Name, player1Score, player2Name, player2Score, player2Symbol, ]);
+
+    const chooseWinner = useCallback(() => {
+        const allBoxes = document.querySelectorAll('.allBoxes');
+        allBoxes.forEach(box => {
+            if (box.classList.contains('horizontalTopBox')) {
+                isWinner(document.querySelectorAll('.horizontalTopBox'));
+            }
+
+            if (box.classList.contains('horizontalMiddleBox')) {
+                isWinner(document.querySelectorAll('.horizontalMiddleBox'));
+            }
+
+            if (box.classList.contains('horizontalBottomBox')) {
+                isWinner(document.querySelectorAll('.horizontalBottomBox'));
+            }
+
+            if (box.classList.contains('verticalLeftBox')) {
+                isWinner(document.querySelectorAll('.verticalLeftBox'));
+            }
+
+            if (box.classList.contains('verticalMiddleBox')) {
+                isWinner(document.querySelectorAll('.verticalMiddleBox'));
+            }
+
+            if (box.classList.contains('verticalRightBox')) {
+                isWinner(document.querySelectorAll('.verticalRightBox'));
+            }
+
+            if (box.classList.contains('diagonal1Box')) {
+                isWinner(document.querySelectorAll('.diagonal1Box'));
+            }
+
+            if (box.classList.contains('diagonal2Box')) {
+                isWinner(document.querySelectorAll('.diagonal2Box'));
+            }
+        });
+    }, [isWinner])
+
+
+    useEffect(() => {
+        //call the chooseWinner function to check always if anyone has one
+        chooseWinner();
+
+        //if there is a winner, gameInProgress is set to false
+        //all timeout's are cleared (to prevent the computerFunction from completing)
+        if (winnerGotten) {
+            setGameInProgress(false);
+            var highestTimeoutId = setTimeout(";");
+            for (var i = 0; i < highestTimeoutId; i++) {
+                clearTimeout(i);
+            }
+        }
+    }, [firstPlayer, chooseWinner, winnerGotten])
 
     const setPlayerFunction = (e) => {
         //console.log(e.target.textContent)
