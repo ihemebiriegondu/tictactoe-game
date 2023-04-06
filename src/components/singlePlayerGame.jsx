@@ -34,7 +34,7 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
                 clearTimeout(i);
             }
         }
-    }, [firstPlayer])
+    }, [firstPlayer, chooseWinner, winnerGotten])
 
 
     const endGameFunction = () => {

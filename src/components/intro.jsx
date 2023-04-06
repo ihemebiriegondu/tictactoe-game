@@ -18,7 +18,7 @@ export default function Intro() {
             </div>
 
             <div className='flex justify-center mt-20'>
-                <Link href={'/selectGame'} className='bg-white block text-center py-4 w-8/12 mx-auto shadow shadow-lightSecondary rounded-3xl md:text-2xl text-base transition duration-300 hover:shadow-md hover:shadow-lightSecondary'>Let's play</Link>
+                <Link href={'/selectGame'} className='bg-white block text-center py-4 w-8/12 mx-auto shadow shadow-lightSecondary rounded-3xl md:text-2xl text-base transition duration-300 hover:shadow-md hover:shadow-lightSecondary'>Let&apos;s play</Link>
             </div>
 
             <div>
