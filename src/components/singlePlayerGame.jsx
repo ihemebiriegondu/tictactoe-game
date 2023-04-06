@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import celebrationGif from '../images/icegif-85.gif'
-import handShake from '../images/draw 1.png'
+import handShake from '../images/draw1.png'
 import WinnerModal from './winnerModal';
 
 export default function SinglePlayerGame({ player1Name, player2Name, player1Symbol, player2Symbol }) {
@@ -21,7 +21,34 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
     const [currentPlayerSymbol, setCurrentPlayerSymbol] = useState(players[0].playerSymbol);
 
 
-    
+    useEffect(() => {
+        //call the chooseWinner function to check always if anyone has one
+        chooseWinner();
+
+        //if there is a winner, gameInProgress is set to false
+        //all timeout's are cleared (to prevent the computerFunction from completing)
+        if (winnerGotten) {
+            setGameInProgress(false);
+            var highestTimeoutId = setTimeout(";");
+            for (var i = 0; i < highestTimeoutId; i++) {
+                clearTimeout(i);
+            }
+        }
+    }, [firstPlayer])
+
+
+    const endGameFunction = () => {
+        const allBoxes = document.querySelectorAll('.allBoxes');
+        let textContents = []
+        allBoxes.forEach(box => {
+            textContents.push(box.textContent)
+        });
+        //check if all the boxes have been filled so as to end the game
+        if (textContents.every((textContent) => textContent != '')) {
+            setGameInProgress(false)
+        }
+    }
+
     const isWinner = (directions) => {
         let directionsTextContents = []
         directions.forEach(direction => {
@@ -60,7 +87,7 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
         }
     }
 
-    const chooseWinner = () => {
+    const chooseWinner = useCallback(() => {
         const allBoxes = document.querySelectorAll('.allBoxes');
         allBoxes.forEach(box => {
             if (box.classList.contains('horizontalTopBox')) {
@@ -95,35 +122,7 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
                 isWinner(document.querySelectorAll('.diagonal2Box'));
             }
         });
-    }
-    
-    useEffect(() => {
-        //call the chooseWinner function to check always if anyone has one
-        chooseWinner();
-
-        //if there is a winner, gameInProgress is set to false
-        //all timeout's are cleared (to prevent the computerFunction from completing)
-        if (winnerGotten) {
-            setGameInProgress(false);
-            var highestTimeoutId = setTimeout(";");
-            for (var i = 0; i < highestTimeoutId; i++) {
-                clearTimeout(i);
-            }
-        }
-    }, [firstPlayer, winnerGotten, chooseWinner])
-
-
-    const endGameFunction = () => {
-        const allBoxes = document.querySelectorAll('.allBoxes');
-        let textContents = []
-        allBoxes.forEach(box => {
-            textContents.push(box.textContent)
-        });
-        //check if all the boxes have been filled so as to end the game
-        if (textContents.every((textContent) => textContent != '')) {
-            setGameInProgress(false)
-        }
-    }
+    }, [])
 
     const computerPlayer = () => {
         const allBoxes = document.querySelectorAll('.allBoxes');

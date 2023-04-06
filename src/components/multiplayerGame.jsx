@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import celebrationGif from '../images/icegif-85.gif'
-import handShake from '../images/draw 1.png'
+import handShake from '../images/draw1.png'
 import WinnerModal from './winnerModal';
 
 export default function MultiplayerGame({ player1Name, player2Name, player1Symbol, player2Symbol }) {

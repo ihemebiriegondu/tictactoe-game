@@ -1,7 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import Router from 'next/router'
 
 export default function WinnerModal({ isWinner, name, imageSrc, playAgainButtonClick }) {
 

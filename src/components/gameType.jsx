@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import oneplayer from '../images/one-player-game-symbol.png'
 import twoplayers from '../images/two-players-game-interface-symbol.png'
-import challenge from '../images/image 3.png'
+import challenge from '../images/image3.png'
 
 export default function GameType() {
     return (
