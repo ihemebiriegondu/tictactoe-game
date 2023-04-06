@@ -9,6 +9,7 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
     const [gameInProgress, setGameInProgress] = useState(true);
     const [winner, setWinner] = useState(''); //winner name
     const [computerPlayed, setComputerPlayed] = useState(false);
+    const [firstPlayer, setFirstPlayer] = useState(player1Name);
     const [player1Score, setPlayer1Score] = useState(0);
     const [player2Score, setPlayer2Score] = useState(0);
 
@@ -33,7 +34,7 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
                 clearTimeout(i);
             }
         }
-    })
+    }, [firstPlayer])
 
 
     const endGameFunction = () => {
@@ -45,7 +46,6 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
         //check if all the boxes have been filled so as to end the game
         if (textContents.every((textContent) => textContent != '')) {
             setGameInProgress(false)
-            console.log('filled')
         }
     }
 
@@ -62,8 +62,8 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
 
             //console.log(directions)
             directions.forEach(direction => {
-                //adding the red color to the winning 3's
-                direction.classList.add('text-red-500')
+                //adding gold background to the winning rows/cols/diagonals
+                direction.classList.add('bg-gold')
             });
 
             if (computerPlayed === true) {
@@ -71,11 +71,18 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
                 if (winnerSymbol === player2Symbol) {
                     setCurrentPlayer(player2Name)
                     setWinner(player2Name)
-                    //console.log(winner)
+                    console.log(player1Score)
+                    console.log(player2Score)
+                    setFirstPlayer(player1Name)
+                    setPlayer2Score(player2Score + 1)
                 }
             } else {
                 setCurrentPlayer(player1Name)
                 setWinner(currentPlayer);
+                console.log(player1Score)
+                console.log(player2Score)
+                setFirstPlayer(player2Name);
+                setPlayer1Score(player1Score + 1)
             }
         }
     }
@@ -143,10 +150,12 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
         if (gameInProgress === true) {
             setTimeout(() => {
                 if (randomBox != undefined) {
-
                     allBoxes[randomBox].textContent = player2Symbol
+                    allBoxes[randomBox].classList.add('text-secondary')
+
                     setCurrentPlayer(players[0].playerName);
                     setCurrentPlayerSymbol(players[0].playerSymbol);
+                    setFirstPlayer(player2Name);
                     endGameFunction();
                     setComputerPlayed(true)
                 }
@@ -160,6 +169,11 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
         if (gameInProgress === true) {
             if (e.target.textContent === '') {
                 e.target.textContent = currentPlayerSymbol
+                if (currentPlayer === player1Name) {
+                    e.target.classList.add('text-primary')
+                }
+
+                setFirstPlayer(player1Name);
                 computerPlayer();
             }
             endGameFunction();
@@ -178,14 +192,15 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
             }
         });
 
-        setCurrentPlayer(currentPlayer)
-        setCurrentPlayerSymbol(currentPlayerSymbol)
+        setCurrentPlayer(player1Name)
+        setCurrentPlayerSymbol(player1Symbol)
         setGameInProgress(true);
         setWinnerGotten(false);
         setWinner('');
 
-        if (currentPlayer === 'You') {
+        if (firstPlayer != 'You') {
             allBoxes[4].textContent = player2Symbol
+            allBoxes[4].classList.add('text-secondary')
             setCurrentPlayerSymbol(player1Symbol)
         }
     }
@@ -247,57 +262,35 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
                 )
             }
 
-            <section className='grid grid-cols-3 sm:w-fit w-11/12 sm:p-10 p-4 rounded-xl mx-auto bg-white sm:gap-4 gap-2 h-fit'>
-                <div className='allBoxes horizontalTopBox diagonal1Box verticalLeftBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+            <section className='grid grid-cols-3 sm:w-fit w-11/12 sm:p-10 p-4 rounded-xl mx-auto bg-lightSecondary sm:gap-4 gap-2 h-fit'>
+                <div className={`allBoxes playing-text horizontalTopBox diagonal1Box verticalLeftBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
                     onClick={(e) => { setPlayerFunction(e) }}
                 ></div>
-                <div className='allBoxes horizontalTopBox verticalMiddleBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+                <div className={`allBoxes playing-text horizontalTopBox verticalMiddleBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
                     onClick={(e) => { setPlayerFunction(e) }}
                 ></div>
-                <div className='allBoxes horizontalTopBox verticalRightBox diagonal2Box bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+                <div className={`allBoxes playing-text horizontalTopBox verticalRightBox diagonal2Box bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
                     onClick={(e) => { setPlayerFunction(e) }}
                 ></div>
-                <div className='allBoxes horizontalMiddleBox verticalLeftBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+                <div className={`allBoxes playing-text horizontalMiddleBox verticalLeftBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
                     onClick={(e) => { setPlayerFunction(e) }}
                 ></div>
-                <div className='allBoxes horizontalMiddleBox diagonal1Box diagonal2Box verticalMiddleBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+                <div className={`allBoxes playing-text horizontalMiddleBox diagonal1Box diagonal2Box verticalMiddleBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
                     onClick={(e) => { setPlayerFunction(e) }}
                 ></div>
-                <div className='allBoxes horizontalMiddleBox verticalRightBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+                <div className={`allBoxes playing-text horizontalMiddleBox verticalRightBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
                     onClick={(e) => { setPlayerFunction(e) }}
                 ></div>
-                <div className='allBoxes horizontalBottomBox verticalLeftBox diagonal2Box bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+                <div className={`allBoxes playing-text horizontalBottomBox verticalLeftBox diagonal2Box bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
                     onClick={(e) => { setPlayerFunction(e) }}
                 ></div>
-                <div className='allBoxes horizontalBottomBox verticalMiddleBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+                <div className={`allBoxes playing-text horizontalBottomBox verticalMiddleBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
                     onClick={(e) => { setPlayerFunction(e) }}
                 ></div>
-                <div className='allBoxes horizontalBottomBox diagonal1Box verticalRightBox bg-black p-4 rounded-xl sm:text-8xl text-6xl text-white text-center sm:w-36 w-auto sm:h-36 h-24'
+                <div className={`allBoxes playing-text horizontalBottomBox diagonal1Box verticalRightBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
                     onClick={(e) => { setPlayerFunction(e) }}
                 ></div>
             </section>
-
-            <div>
-                <div className="flex justify-center pt-6 relative z-20">
-                    <p className={`${gameInProgress ? 'hidden' : 'block'} bg-primary text-white md:py-4 py-2 px-6 rounded-xl font-bold`}
-                        onClick={() => {
-                            const allBoxes = document.querySelectorAll('.allBoxes');
-                            allBoxes.forEach(box => {
-                                box.textContent = ''
-
-                                if (box.classList.contains('text-red-500')) {
-                                    box.classList.remove('text-red-500')
-                                }
-                            });
-                            setCurrentPlayer(players[0].playerName)
-                            setCurrentPlayerSymbol(players[0].playerSymbol)
-                            setGameInProgress(true);
-                            setWinnerGotten(false);
-                            setWinner('');
-                        }}
-                    >Restart</p>
-                </div>
-            </div>
         </>
     )
 }
