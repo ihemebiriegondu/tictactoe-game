@@ -20,36 +20,7 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
     const [currentPlayer, setCurrentPlayer] = useState(player1Name)
     const [currentPlayerSymbol, setCurrentPlayerSymbol] = useState(players[0].playerSymbol);
 
-
-    useEffect(() => {
-        //call the chooseWinner function to check always if anyone has one
-        chooseWinner();
-
-        //if there is a winner, gameInProgress is set to false
-        //all timeout's are cleared (to prevent the computerFunction from completing)
-        if (winnerGotten) {
-            setGameInProgress(false);
-            var highestTimeoutId = setTimeout(";");
-            for (var i = 0; i < highestTimeoutId; i++) {
-                clearTimeout(i);
-            }
-        }
-    }, [firstPlayer, chooseWinner, winnerGotten])
-
-
-    const endGameFunction = () => {
-        const allBoxes = document.querySelectorAll('.allBoxes');
-        let textContents = []
-        allBoxes.forEach(box => {
-            textContents.push(box.textContent)
-        });
-        //check if all the boxes have been filled so as to end the game
-        if (textContents.every((textContent) => textContent != '')) {
-            setGameInProgress(false)
-        }
-    }
-
-    const isWinner = (directions) => {
+    const isWinner = useCallback((directions) => {
         let directionsTextContents = []
         directions.forEach(direction => {
             directionsTextContents.push(direction.textContent)
@@ -85,7 +56,7 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
                 setPlayer1Score(player1Score + 1)
             }
         }
-    }
+    }, []);
 
     const chooseWinner = useCallback(() => {
         const allBoxes = document.querySelectorAll('.allBoxes');
@@ -123,6 +94,35 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
             }
         });
     }, [isWinner])
+
+
+    useEffect(() => {
+        //call the chooseWinner function to check always if anyone has one
+        chooseWinner();
+
+        //if there is a winner, gameInProgress is set to false
+        //all timeout's are cleared (to prevent the computerFunction from completing)
+        if (winnerGotten) {
+            setGameInProgress(false);
+            var highestTimeoutId = setTimeout(";");
+            for (var i = 0; i < highestTimeoutId; i++) {
+                clearTimeout(i);
+            }
+        }
+    }, [firstPlayer, chooseWinner, winnerGotten])
+
+
+    const endGameFunction = () => {
+        const allBoxes = document.querySelectorAll('.allBoxes');
+        let textContents = []
+        allBoxes.forEach(box => {
+            textContents.push(box.textContent)
+        });
+        //check if all the boxes have been filled so as to end the game
+        if (textContents.every((textContent) => textContent != '')) {
+            setGameInProgress(false)
+        }
+    }
 
     const computerPlayer = () => {
         const allBoxes = document.querySelectorAll('.allBoxes');
