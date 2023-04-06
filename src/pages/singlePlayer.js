@@ -3,7 +3,7 @@ import Head from 'next/head'
 import SinglePlayerGame from '@/components/singlePlayerGame'
 import PlayersSelect from '@/components/playersSelect';
 
-export default function singlePlayer() {
+export default function SinglePlayer() {
 
     const [isUserInfoEntered, setIsUserInfoEntered] = useState(false);
     const [player1Symbol, setPlayer1Symbol] = useState('')

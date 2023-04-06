@@ -3,7 +3,7 @@ import Head from 'next/head'
 import PlayersSelect from '@/components/playersSelect'
 import MultiplayerGame from '@/components/multiplayerGame'
 
-export default function multiplayer() {
+export default function Multiplayer() {
 
   const [isUserInfoEntered, setIsUserInfoEntered] = useState(false);
   const [player1Symbol, setPlayer1Symbol] = useState('')
