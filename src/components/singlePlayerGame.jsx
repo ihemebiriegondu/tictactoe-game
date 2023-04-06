@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import celebrationGif from '../images/icegif-85.gif'
 import handShake from '../images/draw1.png'
+import sadFace from '../images/sad.png'
 import WinnerModal from './winnerModal';
 
 export default function SinglePlayerGame({ player1Name, player2Name, player1Symbol, player2Symbol }) {
@@ -19,7 +20,6 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
     ]
     const [currentPlayer, setCurrentPlayer] = useState(player1Name)
     const [currentPlayerSymbol, setCurrentPlayerSymbol] = useState(players[0].playerSymbol);
-
 
     useEffect(() => {
         //if there is a winner, gameInProgress is set to false
@@ -195,8 +195,10 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
         setWinner('');
 
         if (firstPlayer != 'You') {
-            allBoxes[4].textContent = player2Symbol
-            allBoxes[4].classList.add('text-secondary')
+            //get box between 0 - 8
+            let randomBox = Math.floor((Math.random() * 9))
+            allBoxes[randomBox].textContent = player2Symbol
+            allBoxes[randomBox].classList.add('text-secondary')
             setCurrentPlayerSymbol(player1Symbol)
         }
     }
@@ -245,7 +247,15 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
             {
                 winnerGotten && (
                     <div className='absolute h-full w-full bg-black/[.3] z-40 top-0 bottom-0 flex flex-col justify-center px-12' id='winnerModal'>
-                        <WinnerModal isWinner={winnerGotten} name={winner} imageSrc={celebrationGif} playAgainButtonClick={playAgainFunction} />
+                        <WinnerModal isWinner={winnerGotten} name={winner} wonOrLost={'won'} imageSrc={celebrationGif} playAgainButtonClick={playAgainFunction} />
+                    </div>
+                )
+            }
+
+            {
+                (winnerGotten && winner === player2Name) && (
+                    <div className='absolute h-full w-full bg-black/[.3] z-40 top-0 bottom-0 flex flex-col justify-center px-12' id='winnerModal'>
+                        <WinnerModal isWinner={winnerGotten} name={player1Name} wonOrLost={'lost'} imageSrc={sadFace} playAgainButtonClick={playAgainFunction} />
                     </div>
                 )
             }
@@ -253,7 +263,7 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
             {
                 (!winnerGotten && !gameInProgress) && (
                     <div className='absolute h-full w-full bg-black/[.3] z-40 top-0 bottom-0 flex flex-col justify-center px-12' id='winnerModal'>
-                        <WinnerModal isWinner={winnerGotten} name={''} imageSrc={handShake} playAgainButtonClick={playAgainFunction} />
+                        <WinnerModal isWinner={winnerGotten} name={''} wonOrLost={'Draw'} imageSrc={handShake} playAgainButtonClick={playAgainFunction} />
                     </div>
                 )
             }

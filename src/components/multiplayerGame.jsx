@@ -181,7 +181,7 @@ export default function MultiplayerGame({ player1Name, player2Name, player1Symbo
       {
         winnerGotten && (
           <div className='absolute h-full w-full bg-black/[.3] z-40 top-0 bottom-0 flex flex-col justify-center px-12' id='winnerModal'>
-            <WinnerModal isWinner={winnerGotten} name={winner} imageSrc={celebrationGif} playAgainButtonClick={playAgainFunction} />
+            <WinnerModal isWinner={winnerGotten} name={winner} wonOrLost={'Won'} imageSrc={celebrationGif} playAgainButtonClick={playAgainFunction} />
           </div>
         )
       }
@@ -189,7 +189,7 @@ export default function MultiplayerGame({ player1Name, player2Name, player1Symbo
       {
         (!winnerGotten && !gameInProgress) && (
           <div className='absolute h-full w-full bg-black/[.3] z-40 top-0 bottom-0 flex flex-col justify-center px-12' id='winnerModal'>
-            <WinnerModal isWinner={winnerGotten} name={''} imageSrc={handShake} playAgainButtonClick={playAgainFunction} />
+            <WinnerModal isWinner={winnerGotten} name={''} wonOrLost={'Draw'} imageSrc={handShake} playAgainButtonClick={playAgainFunction} />
           </div>
         )
       }

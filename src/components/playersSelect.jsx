@@ -9,13 +9,22 @@ export default function PlayersSelect(props) {
         { symbol1: 'X', symbol2: 'O' },
     ]
     const [player1, setPlayer1Symbol] = useState(symbols[0].symbol1);
-    const [player2, setPlayer2Symbol] = useState(symbols[0].symbol2)
+    const [player2, setPlayer2Symbol] = useState(symbols[0].symbol2);
 
     const startGame = () => {
         setUserEntered(true)
         props.isUserInfoEntered(true)
         props.player1Symbol(player1)
         props.player2Symbol(player2)
+    }
+
+    const switchSymbols = () => {
+        setPlayer1Symbol(player2)
+        setPlayer2Symbol(player1)
+    }
+
+    const shuffleSymbols = () => {
+
     }
 
     return (
@@ -39,11 +48,11 @@ export default function PlayersSelect(props) {
             </div>
 
             <div className='flex justify-center mt-4'>
-                <div className='ring-inset ring-2 ring-gold p-3 rounded-full text-white bg-lightSecondary/[.1] mr-4'>
-                    <HiOutlinePaintBrush className='text-xl' />
+                <div className='ring-inset ring-2 ring-gold p-3 rounded-full text-white bg-lightSecondary/[.1] transition duration-200 ease-in-out group hover:bg-gold mr-4' onClick={() => { shuffleSymbols() }}>
+                    <HiOutlinePaintBrush className='text-xl group-hover:text-secondary' />
                 </div>
-                <div className='ring-inset ring-2 ring-gold p-3 rounded-full text-white bg-lightSecondary/[.1] mr-4'>
-                    <HiOutlineSwitchHorizontal className='text-xl' />
+                <div className='ring-inset ring-2 ring-gold p-3 rounded-full text-white bg-lightSecondary/[.1] transition duration-200 ease-in-out group hover:bg-gold mr-4' onClick={() => { switchSymbols() }}>
+                    <HiOutlineSwitchHorizontal className='text-xl group-hover:text-secondary' />
                 </div>
             </div>
 

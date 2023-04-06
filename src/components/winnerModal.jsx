@@ -2,17 +2,24 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-export default function WinnerModal({ isWinner, name, imageSrc, playAgainButtonClick }) {
+export default function WinnerModal({ isWinner, name, wonOrLost, imageSrc, playAgainButtonClick }) {
 
     return (
         <div className='bg-gold rounded-2xl py-4 px-4 relative'>
             <div className='flex flex-col items-center'>
                 {
-                    isWinner && (
-                        <p className='md:text-3xl text-2xl text-center text-blackPurple font-bold'>{name} won! </p>
+                    (isWinner && name != 'Computer') && (
+                        <p className='md:text-3xl text-2xl text-center text-blackPurple font-bold'>{name} {wonOrLost}! </p>
                     )
                 }
-                <p className={`md:text-3xl text-2xl text-center text-blackPurple font-bold ${isWinner ? 'hidden' : 'block'}`}> Draw </p>
+
+                {
+                    (isWinner && name === 'Computer') && (
+                        <p className='md:text-3xl text-2xl text-center text-blackPurple font-bold'>{name} {wonOrLost}! </p>
+                    )
+                }
+
+                <p className={`md:text-3xl text-2xl text-center text-blackPurple font-bold ${isWinner ? 'hidden' : 'block'}`}> {wonOrLost} </p>
 
                 <div className='relative w-11/12 h-32 top-0'>
                     <Image
