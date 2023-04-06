@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
+import { IoReturnUpBack } from 'react-icons/io5'
 import Head from 'next/head'
+import Link from 'next/link'
 import PlayersSelect from '@/components/playersSelect'
 import MultiplayerGame from '@/components/multiplayerGame'
 
@@ -19,6 +21,9 @@ export default function Multiplayer() {
       </Head>
       <div className='bg-blackPurple absolute h-full w-full'>
         <div className={`${isUserInfoEntered ? 'pt-8' : 'pt-40'}`}>
+          <Link href='/selectGame' className={`bg-lightSecondary block absolute top-8 left-4 md:p-4 p-3 rounded-full cursor-pointer ${isUserInfoEntered ? 'hidden' : 'block'}`}>
+            <IoReturnUpBack className='lg:text-2xl text-xl text-primary' />
+          </Link>
           <PlayersSelect isUserInfoEntered={setIsUserInfoEntered} player1Symbol={setPlayer1Symbol} player2Symbol={setPlayer2Symbol} />
         </div>
 
