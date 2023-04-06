@@ -10,8 +10,6 @@ export default function SinglePlayer() {
     const [isUserInfoEntered, setIsUserInfoEntered] = useState(false);
     const [player1Symbol, setPlayer1Symbol] = useState('')
     const [player2Symbol, setPlayer2Symbol] = useState('')
-    const [isSinglePlayer, setIsSinglePlayer] = useState('')
-    const [singlePlayerTag, setSinglePlayerTag] = useState('')
 
     return (
         <>
