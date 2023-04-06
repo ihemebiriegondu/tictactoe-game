@@ -22,57 +22,6 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
 
 
 
-    const endGameFunction = () => {
-        const allBoxes = document.querySelectorAll('.allBoxes');
-        let textContents = []
-        allBoxes.forEach(box => {
-            textContents.push(box.textContent)
-        });
-        //check if all the boxes have been filled so as to end the game
-        if (textContents.every((textContent) => textContent != '')) {
-            setGameInProgress(false)
-        }
-    }
-
-    const computerPlayer = () => {
-        const allBoxes = document.querySelectorAll('.allBoxes');
-        const allBoxesTextContent = [];
-        const allEmptyBoxesIndex = [];
-
-        allBoxes.forEach(box => {
-            allBoxesTextContent.push(box.textContent);
-        });
-
-        for (let i = 0; i < allBoxesTextContent.length; i++) {
-            if (allBoxesTextContent[i] === '') {
-                //console.log(i)
-                allEmptyBoxesIndex.push(i)
-            }
-        }
-        //console.log(allEmptyBoxesIndex)
-        const randomBox = allEmptyBoxesIndex[Math.floor(Math.random() * allEmptyBoxesIndex.length)];
-        //console.log(randomBox)
-        players.forEach(player => {
-            setCurrentPlayer(player.playerName)
-            setCurrentPlayerSymbol(player.playerSymbol)
-        });
-
-        if (gameInProgress === true) {
-            setTimeout(() => {
-                if (randomBox != undefined) {
-                    allBoxes[randomBox].textContent = player2Symbol
-                    allBoxes[randomBox].classList.add('text-secondary')
-
-                    setCurrentPlayer(players[0].playerName);
-                    setCurrentPlayerSymbol(players[0].playerSymbol);
-                    setFirstPlayer(player2Name);
-                    endGameFunction();
-                    setComputerPlayed(true)
-                }
-            }, 1000);
-        }
-        setComputerPlayed(false);
-    }
 
     const isWinner = useCallback((directions) => {
         let directionsTextContents = []
@@ -110,7 +59,7 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
                 setPlayer1Score(player1Score + 1)
             }
         }
-    }, [computerPlayed, computerPlayer, player1Name, player1Score, player2Name, player2Score, player2Symbol, currentPlayer ]);
+    }, [computerPlayed, player1Name, player1Score, player2Name, player2Score, player2Symbol, currentPlayer ]);
 
     const chooseWinner = useCallback(() => {
         const allBoxes = document.querySelectorAll('.allBoxes');
@@ -164,6 +113,58 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
             }
         }
     }, [firstPlayer, chooseWinner, winnerGotten])
+
+    const endGameFunction = () => {
+        const allBoxes = document.querySelectorAll('.allBoxes');
+        let textContents = []
+        allBoxes.forEach(box => {
+            textContents.push(box.textContent)
+        });
+        //check if all the boxes have been filled so as to end the game
+        if (textContents.every((textContent) => textContent != '')) {
+            setGameInProgress(false)
+        }
+    }
+
+    const computerPlayer = () => {
+        const allBoxes = document.querySelectorAll('.allBoxes');
+        const allBoxesTextContent = [];
+        const allEmptyBoxesIndex = [];
+
+        allBoxes.forEach(box => {
+            allBoxesTextContent.push(box.textContent);
+        });
+
+        for (let i = 0; i < allBoxesTextContent.length; i++) {
+            if (allBoxesTextContent[i] === '') {
+                //console.log(i)
+                allEmptyBoxesIndex.push(i)
+            }
+        }
+        //console.log(allEmptyBoxesIndex)
+        const randomBox = allEmptyBoxesIndex[Math.floor(Math.random() * allEmptyBoxesIndex.length)];
+        //console.log(randomBox)
+        players.forEach(player => {
+            setCurrentPlayer(player.playerName)
+            setCurrentPlayerSymbol(player.playerSymbol)
+        });
+
+        if (gameInProgress === true) {
+            setTimeout(() => {
+                if (randomBox != undefined) {
+                    allBoxes[randomBox].textContent = player2Symbol
+                    allBoxes[randomBox].classList.add('text-secondary')
+
+                    setCurrentPlayer(players[0].playerName);
+                    setCurrentPlayerSymbol(players[0].playerSymbol);
+                    setFirstPlayer(player2Name);
+                    endGameFunction();
+                    setComputerPlayed(true)
+                }
+            }, 1000);
+        }
+        setComputerPlayed(false);
+    }
 
     const setPlayerFunction = (e) => {
         //console.log(e.target.textContent)
