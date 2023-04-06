@@ -69,12 +69,12 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
                     setWinner(player2Name)
                     setFirstPlayer(player1Name)
                     setPlayer2Score(player2Score + 1)
+                } else {
+                    setCurrentPlayer(player1Name)
+                    setWinner(player1Name);
+                    setFirstPlayer(player2Name);
+                    setPlayer1Score(player1Score + 1)
                 }
-            } else {
-                setCurrentPlayer(player1Name)
-                setWinner(currentPlayer);
-                setFirstPlayer(player2Name);
-                setPlayer1Score(player1Score + 1)
             }
         }
     }
