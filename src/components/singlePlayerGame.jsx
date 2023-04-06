@@ -110,7 +110,7 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
                 setPlayer1Score(player1Score + 1)
             }
         }
-    }, [computerPlayed, computerPlayer, player1Name, player1Score, player2Name, player2Score, player2Symbol, ]);
+    }, [computerPlayed, computerPlayer, player1Name, player1Score, player2Name, player2Score, player2Symbol, currentPlayer ]);
 
     const chooseWinner = useCallback(() => {
         const allBoxes = document.querySelectorAll('.allBoxes');
