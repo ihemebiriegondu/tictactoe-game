@@ -11,6 +11,7 @@ export default function PlayersSelect(props) {
     const [player1, setPlayer1Symbol] = useState(symbols[0].symbol1);
     const [player2, setPlayer2Symbol] = useState(symbols[0].symbol2);
 
+
     const startGame = () => {
         setUserEntered(true)
         props.isUserInfoEntered(true)
