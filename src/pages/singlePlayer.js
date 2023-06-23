@@ -48,7 +48,7 @@ export default function SinglePlayer() {
                             <div className={`bg-gold shadow-sm block absolute top-8 right-4 lg:p-2 md:p-3 p-2 rounded-full cursor-pointer transition duration-300 ease-in hover:bg-gold/[.95] hover:duration-300 hover:ease-in`}
                                 data-target-element='dropDown' onClick={() => { setShowDropdown(!showDropdown) }}
                             >
-                                <MdArrowDropDown className='lg:text-4xl text-3xl text-primary' data-target-element='dropDown' />
+                                <MdArrowDropDown className='lg:text-4xl text-3xl text-primary' data-target-element='dropDown' onClick={(e) => { setShowDropdown(!showDropdown);}} />
                             </div>
 
                             {/* dropdown div */}

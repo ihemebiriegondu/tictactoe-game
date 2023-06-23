@@ -4,7 +4,7 @@ import handShake from '../images/draw1.png'
 import sadFace from '../images/sad.png'
 import WinnerModal from './winnerModal';
 
-export default function SinglePlayerGame({ player1Name, player2Name, player1Symbol, player2Symbol }) {
+export default function SinglePlayerGame({ player1Name, player2Name, player1Symbol, player2Symbol, isEasy, isHard, isMedium }) {
 
     const [winnerGotten, setWinnerGotten] = useState(false);
     const [gameInProgress, setGameInProgress] = useState(true);
@@ -116,6 +116,134 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
         });
     }
 
+    // for advanced computer playing
+    const isAlmostWin = (directions) => {
+        //getting direction passed from the checkIsAlmostWin function
+        let directionsTextContents = []
+        directions.forEach(direction => {
+            directionsTextContents.push(direction.textContent)
+        });
+
+        //checking if any of the directions gotten has 2 similar symobol (to either block or win)
+        //first check if it is not empty
+
+        if ((directionsTextContents[0] !== '' && directionsTextContents[1] !== '') && directionsTextContents[0] === directionsTextContents[1]) {
+            //console.log(directionsTextContents)
+
+            directions.forEach(direction => {
+                if (direction.textContent === '') {
+                    direction.textContent = player2Symbol
+                    direction.classList.add('text-secondary')
+                }
+                //console.log(direction.textContent)
+            })
+            return true
+        } else if (((directionsTextContents[0] !== '' && directionsTextContents[2] !== '') && directionsTextContents[0] === directionsTextContents[2])) {
+            //console.log(directionsTextContents)
+
+            directions.forEach(direction => {
+                if (direction.textContent === '') {
+                    direction.textContent = player2Symbol
+                    direction.classList.add('text-secondary')
+                }
+                //console.log(direction.textContent)
+            })
+            return true
+        } else if ((directionsTextContents[1] !== '' && directionsTextContents[2] !== '') && directionsTextContents[1] === directionsTextContents[2]) {
+            //console.log(directionsTextContents)
+
+            directions.forEach(direction => {
+                if (direction.textContent === '') {
+                    direction.textContent = player2Symbol
+                    direction.classList.add('text-secondary')
+                }
+                //console.log(direction.textContent)
+            })
+            return true
+        } else {
+            return false
+        }
+    }
+
+    const checkIsAlmostWin = () => {
+        //getting all boxes
+        const allBoxes = document.querySelectorAll('.allBoxes');
+        const allPlayer1Boxes = [];
+
+        //getting all empty box that can be filled randomly (when no winning move)
+        const allBoxesTextContent = [];
+        const allEmptyBoxesIndex = [];
+        allBoxes.forEach(box => {
+            allBoxesTextContent.push(box.textContent);
+        });
+        for (let i = 0; i < allBoxesTextContent.length; i++) {
+            if (allBoxesTextContent[i] === '') {
+                //console.log(i)
+                allEmptyBoxesIndex.push(i)
+            }
+        }
+
+        //getting boxes that contains player 1 symbol and adding it to the allPlayer1Boxes array
+        for (let i = 0; i < allBoxes.length; i++) {
+            if (allBoxes[i].textContent == player1Symbol) {
+                allPlayer1Boxes.push(allBoxes[i]);
+            }
+        }
+
+        let nextBoxDataAttribute = [];
+        const emptyBoxWithSameAttribute = [];
+
+        //getting the data attribute of the boxes containing player 1 symbol
+        //and comparing for the boxes with the same attributes
+        if (allPlayer1Boxes.length > 1) {
+            for (let j = 0; j < allPlayer1Boxes.length; j++) {
+                let boxDataAttribute = JSON.parse(allPlayer1Boxes[j].dataset.directions)
+
+                //I started from j+1 so as not to compare an element with itself
+                for (let k = j + 1; k < allPlayer1Boxes.length; k++) {
+                    nextBoxDataAttribute = JSON.parse(allPlayer1Boxes[k].dataset.directions)
+
+                    for (let l = 0; l < boxDataAttribute.length; l++) {
+                        for (let m = 0; m < nextBoxDataAttribute.length; m++) {
+                            if (boxDataAttribute[l] === nextBoxDataAttribute[m]) {
+                                console.log(boxDataAttribute[l])
+                                console.log(nextBoxDataAttribute[m])
+
+                                //I got all elements with the data-direction attribute
+                                //got the ones that has the same attribute as the  guys (l,m) above and are also empty
+                                //add them to the emtyBoxWithSameAttribute array
+                                //and the fill the first element in the array with computer's symbol
+                                const boxWithAttribute = document.querySelectorAll(`[data-directions]`)
+                                for (let n = 0; n < boxWithAttribute.length; n++) {
+                                    if (JSON.parse(boxWithAttribute[n].dataset.directions).includes(boxDataAttribute[l])) {
+                                        //console.log(boxWithAttribute[n])
+                                        if (boxWithAttribute[n].textContent == '') {
+                                            //console.log(boxWithAttribute[n])
+                                            emptyBoxWithSameAttribute.push(boxWithAttribute[n])
+                                            //console.log(emptyBoxWithSameAttribute)
+                                            emptyBoxWithSameAttribute[0].textContent = player2Symbol
+                                            emptyBoxWithSameAttribute[0].classList.add('text-secondary')
+                                        }
+                                    }
+                                }
+                                //else if there are no winning moves by player 1
+                            } else if (boxDataAttribute[l] != nextBoxDataAttribute[m]) {
+                               console.log('no way')
+                            }
+                        }
+                    }
+                }
+            }
+            //else if only one box is filled (i.e player 1 has played only once)
+        } else {
+            const randomBox = allEmptyBoxesIndex[Math.floor(Math.random() * allEmptyBoxesIndex.length)];
+            //console.log(randomBox)
+            if (randomBox != undefined) {
+                allBoxes[randomBox].textContent = player2Symbol
+                allBoxes[randomBox].classList.add('text-secondary')
+            }
+        }
+    }
 
     const computerPlayer = () => {
         const allBoxes = document.querySelectorAll('.allBoxes');
@@ -133,28 +261,53 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
             }
         }
         //console.log(allEmptyBoxesIndex)
-        const randomBox = allEmptyBoxesIndex[Math.floor(Math.random() * allEmptyBoxesIndex.length)];
-        //console.log(randomBox)
-        players.forEach(player => {
-            setCurrentPlayer(player.playerName)
-            setCurrentPlayerSymbol(player.playerSymbol)
-        });
 
-        if (gameInProgress === true) {
-            setTimeout(() => {
-                if (randomBox != undefined) {
-                    allBoxes[randomBox].textContent = player2Symbol
-                    allBoxes[randomBox].classList.add('text-secondary')
+        if (isEasy) {
+            const randomBox = allEmptyBoxesIndex[Math.floor(Math.random() * allEmptyBoxesIndex.length)];
+            //console.log(randomBox)
+            players.forEach(player => {
+                setCurrentPlayer(player.playerName)
+                setCurrentPlayerSymbol(player.playerSymbol)
+            });
+
+            if (gameInProgress === true) {
+                setTimeout(() => {
+                    if (randomBox != undefined) {
+                        allBoxes[randomBox].textContent = player2Symbol
+                        allBoxes[randomBox].classList.add('text-secondary')
+
+                        setCurrentPlayer(players[0].playerName);
+                        setCurrentPlayerSymbol(players[0].playerSymbol);
+                        setFirstPlayer(player1Name);
+                        endGameFunction();
+                        setComputerPlayed(true)
+                    }
+                    chooseWinner();
+                }, 400);
+            }
+        }
+
+        if (isMedium) {
+            players.forEach(player => {
+                setCurrentPlayer(player.playerName)
+                setCurrentPlayerSymbol(player.playerSymbol)
+            });
+
+            if (gameInProgress === true) {
+                setTimeout(() => {
+                    checkIsAlmostWin();
 
                     setCurrentPlayer(players[0].playerName);
                     setCurrentPlayerSymbol(players[0].playerSymbol);
                     setFirstPlayer(player1Name);
                     endGameFunction();
                     setComputerPlayed(true)
-                }
-                chooseWinner();
-            }, 1000);
+
+                    chooseWinner();
+                }, 400);
+            }
         }
+
         setComputerPlayed(false);
         chooseWinner();
     }
@@ -270,31 +423,31 @@ export default function SinglePlayerGame({ player1Name, player2Name, player1Symb
 
             <section className='grid grid-cols-3 sm:w-fit w-11/12 sm:p-10 p-4 rounded-xl mx-auto bg-lightSecondary sm:gap-4 gap-2 h-fit'>
                 <div className={`allBoxes playing-text horizontalTopBox diagonal1Box verticalLeftBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
-                    onClick={(e) => { setPlayerFunction(e) }}
+                    onClick={(e) => { setPlayerFunction(e) }} data-directions='["horizontalTopBox", "diagonal1Box", "verticalLeftBox"]'
                 ></div>
                 <div className={`allBoxes playing-text horizontalTopBox verticalMiddleBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
-                    onClick={(e) => { setPlayerFunction(e) }}
+                    onClick={(e) => { setPlayerFunction(e) }} data-directions='["horizontalTopBox", "verticalMiddleBox"]'
                 ></div>
                 <div className={`allBoxes playing-text horizontalTopBox verticalRightBox diagonal2Box bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
-                    onClick={(e) => { setPlayerFunction(e) }}
+                    onClick={(e) => { setPlayerFunction(e) }} data-directions='["horizontalTopBox", "verticalRightBox", "diagonal2Box"]'
                 ></div>
                 <div className={`allBoxes playing-text horizontalMiddleBox verticalLeftBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
-                    onClick={(e) => { setPlayerFunction(e) }}
+                    onClick={(e) => { setPlayerFunction(e) }} data-directions='["horizontalMiddleBox", "verticalLeftBox"]'
                 ></div>
                 <div className={`allBoxes playing-text horizontalMiddleBox diagonal1Box diagonal2Box verticalMiddleBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
-                    onClick={(e) => { setPlayerFunction(e) }}
+                    onClick={(e) => { setPlayerFunction(e) }} data-directions='["horizontalMiddleBox", "diagonal1Box", "diagonal2Box"]'
                 ></div>
                 <div className={`allBoxes playing-text horizontalMiddleBox verticalRightBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
-                    onClick={(e) => { setPlayerFunction(e) }}
+                    onClick={(e) => { setPlayerFunction(e) }} data-directions='["horizontalMiddleBox", "verticalRightBox"]'
                 ></div>
                 <div className={`allBoxes playing-text horizontalBottomBox verticalLeftBox diagonal2Box bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
-                    onClick={(e) => { setPlayerFunction(e) }}
+                    onClick={(e) => { setPlayerFunction(e) }} data-directions='["horizontalBottomBox", "verticalLeftBox", "diagonal2Box"]'
                 ></div>
                 <div className={`allBoxes playing-text horizontalBottomBox verticalMiddleBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
-                    onClick={(e) => { setPlayerFunction(e) }}
+                    onClick={(e) => { setPlayerFunction(e) }} data-directions='["horizontalBottomBox", "verticalMiddleBox"]'
                 ></div>
                 <div className={`allBoxes playing-text horizontalBottomBox diagonal1Box verticalRightBox bg-blackPurple [text-shadow:_0_8px_0_rgb(0_0_0_/_60%)] p-4 rounded-xl sm:text-8xl text-6xl text-center sm:w-36 w-auto sm:h-36 h-24`}
-                    onClick={(e) => { setPlayerFunction(e) }}
+                    onClick={(e) => { setPlayerFunction(e) }} data-directions='["horizontalBottomBox", "verticalRightBox", "diagonal1Box"]'
                 ></div>
             </section>
         </>
